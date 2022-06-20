@@ -34,7 +34,7 @@ namespace Tgs.GameRecord.JiliService
             _logger.LogInformation("Information Received:{LogInfo}", messageModel);
 
             return _service.ExecuteAsync(new ScheduleDispatchCommand(
-                GameApiUrl: messageModel.GameRecordApiUrl,
+                GameApiUrl: messageModel.GameApiUrl,
                 GameProviderAgentId: messageModel.GameProviderAgentId,
                 GameProviderAgentKey: messageModel.GameProviderAgentKey), cancellationToken);
         }
