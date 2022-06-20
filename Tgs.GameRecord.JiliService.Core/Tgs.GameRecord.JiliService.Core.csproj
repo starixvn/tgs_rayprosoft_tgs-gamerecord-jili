@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Scrutor" Version="4.2.0" />
+		<PackageReference Include="StackExchange.Redis" Version="2.6.45" />
+		<PackageReference Include="Tgs.GameInterface.JiliService.Client" Version="0.0.1" />
+		<PackageReference Include="Tgs.GameProviders.QueryServer.Client" Version="0.0.13" />
+		<PackageReference Include="Tgs.MessageQueue" Version="2.1.0" />
+		<PackageReference Include="Tgs.MessageQueue.MongoDB" Version="2.1.1" />
+		<PackageReference Include="Tgs.MessageQueue.Nats" Version="2.1.6" />
+		<PackageReference Include="TGS.ServiceUtility" Version="0.1.0" />
+	</ItemGroup>
+
+</Project>
