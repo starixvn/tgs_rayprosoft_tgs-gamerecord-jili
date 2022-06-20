@@ -22,11 +22,12 @@ namespace Tgs.GameRecord.JiliService.Core.UnitTest
             var fakeLogger = NullLogger<JiliWorkerService>.Instance;
             var fakeGamePullRecordCommand = Substitute.For<ICommandService<GamePullRecordCommand>>();
             var fakeUtensil = Substitute.For<IUtensil>();
-            var gameRecordInfoOptions = new GameRecordInfoOptions(
-                GameProviderCode: "JILITF",
-                GameProviderConfig: "JILITFConfiguration",
-                IntervalMinute: 5,
-                PageLimit: 500);
+            var gameRecordInfoOptions = new GameRecordInfoOptions()
+            {
+                GameProviderCode = "JILITF",
+                IntervalMinute = 5,
+                PageLimit = 500
+            };
             var options = Options.Create(gameRecordInfoOptions);
             var command = new JiliWorkerCommand(
                 GameApiUrl: new("http://localhost/"),
