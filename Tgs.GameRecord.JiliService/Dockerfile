@@ -10,18 +10,18 @@ ARG BuildConfiguration=Release
 RUN --mount=type=secret,id=nuget,dst=/pat cp /pat ~/.nuget/NuGet/NuGet.Config
 WORKDIR /src
 COPY ["nuget.config", "."]
-COPY ["Tgs.GameRecord.AwcService/Tgs.GameRecord.AwcService.csproj", "Tgs.GameRecord.AwcService/"]
-COPY ["Tgs.GameRecord.AwcService.Core/Tgs.GameRecord.AwcService.Core.csproj", "Tgs.GameRecord.AwcService.Core/"]
-RUN dotnet restore "Tgs.GameRecord.AwcService/Tgs.GameRecord.AwcService.csproj"
+COPY ["Tgs.GameRecord.JiliService/Tgs.GameRecord.JiliService.csproj", "Tgs.GameRecord.JiliService/"]
+COPY ["Tgs.GameRecord.JiliService.Core/Tgs.GameRecord.JiliService.Core.csproj", "Tgs.GameRecord.JiliService.Core/"]
+RUN dotnet restore "Tgs.GameRecord.JiliService/Tgs.GameRecord.JiliService.csproj"
 COPY . .
-WORKDIR "/src/Tgs.GameRecord.AwcService"
-RUN dotnet build "Tgs.GameRecord.AwcService.csproj" -c $BuildConfiguration -o /app/build
+WORKDIR "/src/Tgs.GameRecord.JiliService"
+RUN dotnet build "Tgs.GameRecord.JiliService.csproj" -c $BuildConfiguration -o /app/build
 
 FROM build AS publish
 ARG BuildConfiguration
-RUN dotnet publish "Tgs.GameRecord.AwcService.csproj" -c $BuildConfiguration -o /app/publish
+RUN dotnet publish "Tgs.GameRecord.JiliService.csproj" -c $BuildConfiguration -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Tgs.GameRecord.AwcService.dll"]
+ENTRYPOINT ["dotnet", "Tgs.GameRecord.JiliService.dll"]

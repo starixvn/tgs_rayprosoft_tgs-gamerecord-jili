@@ -15,7 +15,7 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "OTEL_SERVICE_NAME": "Game-Gamerecord-AWC-Service(local)",
+        "OTEL_SERVICE_NAME": "Game-Gamerecord-Jili-Service(local)",
         "NODE_IP": "otel.rpgp.cc"
       },
       "applicationUrl": "https://localhost:7031;http://localhost:5223",
@@ -29,7 +29,7 @@
       "useSSL": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "OTEL_SERVICE_NAME": "Game-Gamerecord-AWC-Service(local)",
+        "OTEL_SERVICE_NAME": "Game-Gamerecord-Jili-Service(local)",
         "NODE_IP": "otel.rpgp.cc"
       }
     }
