@@ -36,7 +36,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddMemoryCache();
 
-builder.Services.AddGameRecordAwcService((options, sp) =>
+builder.Services.AddGameRecordJiliService((options, sp) =>
 {
     var configuration = sp.GetRequiredService<IConfiguration>();
     options.ConnectionString = configuration.GetConnectionString("Redis");

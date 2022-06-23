@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "Tgs.GameRecord.AwcService": {
+    "Tgs.GameRecord.JiliService": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
