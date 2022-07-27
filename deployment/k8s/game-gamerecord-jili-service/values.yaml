@@ -5,13 +5,13 @@
 replicaCount: 1
 
 image:
-  repository: harbor.rpgp.cc/tgs/game-gamerecord-jili-service
+  repository: pgtgs/game-gamerecord-jili-service
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
 imagePullSecrets:
-  - name: secret-tgs-harbor
+  - name: dockerhub
 nameOverride: "game-gamerecord-jili-service"
 fullnameOverride: "game-gamerecord-jili-service"
 
