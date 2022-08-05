@@ -42,6 +42,22 @@ namespace Tgs.GameRecord.JiliService.Core.ApplicationServices
                 var clientStatus = record.Status == GameInterfaceJiliServiceGamePullRecordStatus.JiliStatusWin ? GameRoundClientStatus.Win : GameRoundClientStatus.Loss;
                 var playerWinLoss = record.PayoffAmount - record.BetAmount;
 
+                var additionalData = new
+                {
+                    record.Account,
+                    record.WagersId,
+                    record.GameId,
+                    record.WagersTime,
+                    BetAmount = record.BetAmount.ToDecimal(),
+                    record.PayoffTime,
+                    PayoffAmount = record.PayoffAmount.ToDecimal(),
+                    Status = record.Status.ToString(),
+                    record.SettlementTime,
+                    record.GameCategoryId,
+                    record.Type,
+                    record.AgentId
+                };
+
                 var gameRoundCommand = new GameRoundCommand(
                     ExternalRoundId: record.WagersId,
                     GameProviderId: command.GameProviderId,
@@ -62,7 +78,7 @@ namespace Tgs.GameRecord.JiliService.Core.ApplicationServices
                     Commission: 0,
                     Turnover: record.BetAmount,
                     PlayerWinLoss: playerWinLoss,
-                    AdditionalData: JsonSerializer.Serialize(record),
+                    AdditionalData: JsonSerializer.Serialize(additionalData),
                     ClientStatus: clientStatus,
                     Success: success);
 

@@ -19,7 +19,6 @@ namespace Tgs.GameRecord.JiliService.Core.ApplicationServices
 
         public ValueTask ExecuteAsync(GameRoundCommand command, CancellationToken cancellationToken = default)
         {
-
             var subject = $"tgs.gp.gamerecord.database.round.{command.GameProviderCode}".ToLower();
 
             _logger.LogInformation("LogOn:{logOn}  Subject:{subject} MessageRequest:{request}", DateTime.Now.ToString("o"), subject, command);
