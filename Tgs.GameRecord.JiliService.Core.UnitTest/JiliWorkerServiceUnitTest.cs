@@ -20,7 +20,7 @@ namespace Tgs.GameRecord.JiliService.Core.UnitTest
         {
             var fakeGameInterfaceJiliServiceGrpc = Substitute.For<IGameInterfaceJiliServiceGrpc>();
             var fakeLogger = NullLogger<JiliWorkerService>.Instance;
-            var fakeGamePullRecordBatchCommand = Substitute.For<ICommandService<GamePullRecordBatchCommand>>();
+            var fakeGamePullRecordCommand = Substitute.For<ICommandService<GamePullRecordCommand>>();
             var fakeUtensil = Substitute.For<IUtensil>();
             var gameRecordInfoOptions = new GameRecordInfoOptions()
             {
@@ -52,7 +52,7 @@ namespace Tgs.GameRecord.JiliService.Core.UnitTest
                 fakeGameInterfaceJiliServiceGrpc,
                 fakeLogger,
                 fakeUtensil,
-                fakeGamePullRecordBatchCommand);
+                fakeGamePullRecordCommand);
 
             await service.ExecuteAsync(command).ConfigureAwait(false);
         }
