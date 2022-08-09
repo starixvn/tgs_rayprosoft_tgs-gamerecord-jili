@@ -8,9 +8,9 @@ namespace Tgs.GameRecord.JiliService
 {
     public class ManualMessageHandler : IMessageProcessor
     {
-        private readonly ICommandService<JiliWorkerCommand> _service;
+        private readonly ICommandService<JiliManualWorkerCommand> _service;
 
-        public ManualMessageHandler(ICommandService<JiliWorkerCommand> service)
+        public ManualMessageHandler(ICommandService<JiliManualWorkerCommand> service)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
@@ -20,7 +20,7 @@ namespace Tgs.GameRecord.JiliService
             var json = Encoding.UTF8.GetString(data.Span);
             var request = JsonSerializer.Deserialize<ManualMessageRequest>(json)!;
 
-            var gameRecordCommand = new JiliWorkerCommand(
+            var gameRecordCommand = new JiliManualWorkerCommand(
                 GameApiUrl: request.GameApiUrl,
                 GameProviderAgentId: request.GameProviderAgentId,
                 GameProviderAgentKey: request.GameProviderAgentKey,

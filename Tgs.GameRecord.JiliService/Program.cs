@@ -84,7 +84,8 @@ builder.Services
          .AddProcessor<ManualMessageHandler>("gp.gamerecord.manual.jilitf", "gp.gamerecord.manual");
      })
      .ClearAllExchanges()
-     .AddMongoGlobPatternExchange("tgs.gp.gamerecord.database.round.jilitf", "gp.gamerecord.database", "tgs.gp.gamerecord.database.round.jilitf");
+     .AddMongoGlobPatternExchange("tgs.gp.gamerecord.database.round.jilitf", "gp.gamerecord.database", "tgs.gp.gamerecord.database.round.jilitf")
+     .AddMongoGlobPatternExchange("tgs.gp.gamerecord.database.round.batch.jilitf", "gp.gamerecord.database", "tgs.gp.gamerecord.database.round.batch.jilitf");
 
 builder.Services
      .AddSingleton<IConfigureOptions<OtlpExporterOptions>>(
