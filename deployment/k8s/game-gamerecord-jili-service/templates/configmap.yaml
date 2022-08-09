@@ -8,7 +8,7 @@ data:
     {
       "GameRecordInfo": {
         "GameProviderCode": "JILITF",
-        "IntervalMinute": 5,
+        "IntervalMinute": 2,
          "PageLimit": 500
       },
       "GameRecord": {
