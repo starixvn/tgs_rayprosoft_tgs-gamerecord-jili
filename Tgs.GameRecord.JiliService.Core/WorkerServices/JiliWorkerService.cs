@@ -11,7 +11,7 @@ namespace Tgs.GameRecord.JiliService.Core.WorkerServices
         private readonly GameRecordInfoOptions _gameRecordInfo;
         private readonly IGameInterfaceJiliServiceGrpc _grpc;
         private readonly ILogger<JiliWorkerService> _logger;
-        private readonly ICommandService<GamePullRecordCommand> _service;
+        private readonly ICommandService<GamePullRecordBatchCommand> _service;
         private readonly IUtensil _utensil;
 
         public JiliWorkerService(
@@ -19,7 +19,7 @@ namespace Tgs.GameRecord.JiliService.Core.WorkerServices
             IGameInterfaceJiliServiceGrpc grpc,
             ILogger<JiliWorkerService> logger,
             IUtensil utensil,
-            ICommandService<GamePullRecordCommand> service)
+            ICommandService<GamePullRecordBatchCommand> service)
         {
             _gameRecordInfo = options.Value;
             _grpc = grpc ?? throw new ArgumentNullException(nameof(grpc));
@@ -62,7 +62,7 @@ namespace Tgs.GameRecord.JiliService.Core.WorkerServices
                     break;
                 }
 
-                await _service.ExecuteAsync(new GamePullRecordCommand(
+                await _service.ExecuteAsync(new GamePullRecordBatchCommand(
                     GameProviderId: gameProviderId,
                     GameProviderCode: _gameRecordInfo.GameProviderCode,
                     Records: gamePullRecordReply.Items), cancellationToken: cancellationToken).ConfigureAwait(false);
