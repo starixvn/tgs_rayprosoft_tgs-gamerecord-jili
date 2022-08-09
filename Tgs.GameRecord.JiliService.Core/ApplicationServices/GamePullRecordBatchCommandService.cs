@@ -6,11 +6,11 @@ namespace Tgs.GameRecord.JiliService.Core.ApplicationServices
 {
     internal class GamePullRecordBatchCommandService : ICommandService<GamePullRecordBatchCommand>
     {
-        private readonly ICommandService<GamePullRecordBatchCommand> _service;
+        private readonly ICommandService<GameRoundBatchCommand> _service;
         private readonly IUtensil _utensil;
 
         public GamePullRecordBatchCommandService(
-            ICommandService<GamePullRecordBatchCommand> service,
+            ICommandService<GameRoundBatchCommand> service,
             IUtensil utensil)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
@@ -19,7 +19,7 @@ namespace Tgs.GameRecord.JiliService.Core.ApplicationServices
 
         public async ValueTask ExecuteAsync(GamePullRecordBatchCommand command, CancellationToken cancellationToken = default)
         {
-            var gameRoundCommands = new List<GameRecord>();
+            var gameRecords = new List<GameRecord>();
 
             foreach (var record in command.Records)
             {
@@ -60,7 +60,7 @@ namespace Tgs.GameRecord.JiliService.Core.ApplicationServices
                     record.AgentId
                 };
 
-                gameRoundCommands.Add(new GameRecord(
+                gameRecords.Add(new GameRecord(
                     ExternalRoundId: record.WagersId,
                     GameProviderId: command.GameProviderId,
                     GameProviderCode: command.GameProviderCode,
@@ -84,6 +84,8 @@ namespace Tgs.GameRecord.JiliService.Core.ApplicationServices
                     ClientStatus: clientStatus,
                     Success: success));
             }
+
+            await _service.ExecuteAsync(new GameRoundBatchCommand(GameRecords: gameRecords)).ConfigureAwait(false);
         }
     }
 }
