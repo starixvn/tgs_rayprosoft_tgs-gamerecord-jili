@@ -2,87 +2,86 @@
 using Microsoft.Extensions.Options;
 using Tgs.GameProviders.QueryServer.Models;
 
-namespace Tgs.GameRecord.JiliService.Core
+namespace Tgs.GameRecord.JiliService.Core;
+
+internal class UtensilMemoryCacheRepository : IUtensil
 {
-    internal class UtensilMemoryCacheRepository : IUtensil
+    private readonly TimeSpan _absoluteExpirationRelativeToNow;
+    private readonly GameRecordInfoOptions _gameRecordInfo;
+    private readonly IMemoryCache _memoryCache;
+    private readonly IUtensil _utensil;
+
+    public UtensilMemoryCacheRepository(
+        IUtensil utensil,
+        TimeSpan absoluteExpirationRelativeToNow,
+        IOptions<GameRecordInfoOptions> options,
+        IMemoryCache memoryCache)
     {
-        private readonly TimeSpan _absoluteExpirationRelativeToNow;
-        private readonly GameRecordInfoOptions _gameRecordInfo;
-        private readonly IMemoryCache _memoryCache;
-        private readonly IUtensil _utensil;
+        _absoluteExpirationRelativeToNow = absoluteExpirationRelativeToNow;
+        _gameRecordInfo = options.Value;
+        _utensil = utensil ?? throw new ArgumentNullException(nameof(utensil));
+        _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+    }
 
-        public UtensilMemoryCacheRepository(
-            IUtensil utensil,
-            TimeSpan absoluteExpirationRelativeToNow,
-            IOptions<GameRecordInfoOptions> options,
-            IMemoryCache memoryCache)
+    public async ValueTask<Guid?> BrandGetGameProviderConfigurationIdAsync(Guid brandId, Guid gameProviderId)
+    {
+        var key = $"{_gameRecordInfo.GameProviderCode}:{brandId}:{gameProviderId}";
+        if (!_memoryCache.TryGetValue(key, out Guid? gameProviderConfigurationId))
         {
-            _absoluteExpirationRelativeToNow = absoluteExpirationRelativeToNow;
-            _gameRecordInfo = options.Value;
-            _utensil = utensil ?? throw new ArgumentNullException(nameof(utensil));
-            _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
-        }
+            gameProviderConfigurationId = await _utensil.BrandGetGameProviderConfigurationIdAsync(brandId, gameProviderId).ConfigureAwait(false);
 
-        public async ValueTask<Guid?> BrandGetGameProviderConfigurationIdAsync(Guid brandId, Guid gameProviderId)
-        {
-            var key = $"{_gameRecordInfo.GameProviderCode}:{brandId}:{gameProviderId}";
-            if (!_memoryCache.TryGetValue(key, out Guid? gameProviderConfigurationId))
+            if (gameProviderConfigurationId == null)
             {
-                gameProviderConfigurationId = await _utensil.BrandGetGameProviderConfigurationIdAsync(brandId, gameProviderId).ConfigureAwait(false);
-
-                if (gameProviderConfigurationId == null)
-                {
-                    return null;
-                }
-                _ = _memoryCache.Set(key, gameProviderConfigurationId, absoluteExpirationRelativeToNow: _absoluteExpirationRelativeToNow);
+                return null;
             }
-            return gameProviderConfigurationId;
+            _ = _memoryCache.Set(key, gameProviderConfigurationId, absoluteExpirationRelativeToNow: _absoluteExpirationRelativeToNow);
         }
+        return gameProviderConfigurationId;
+    }
 
-        public async ValueTask<int?> GetGameIdAsync(Guid gameProviderId, string gameExternalId)
+    public async ValueTask<int?> GetGameIdAsync(Guid gameProviderId, string gameExternalId)
+    {
+        var key = $"{_gameRecordInfo.GameProviderCode}:{gameExternalId}";
+        if (!_memoryCache.TryGetValue(key, out int? gameId))
         {
-            var key = $"{_gameRecordInfo.GameProviderCode}:{gameExternalId}";
-            if (!_memoryCache.TryGetValue(key, out int? gameId))
+            gameId = await _utensil.GetGameIdAsync(gameProviderId, gameExternalId).ConfigureAwait(false);
+
+            if (gameId.HasValue)
             {
-                gameId = await _utensil.GetGameIdAsync(gameProviderId, gameExternalId).ConfigureAwait(false);
-
-                if (gameId.HasValue)
-                {
-                    _ = _memoryCache.Set(key, gameId, absoluteExpirationRelativeToNow: _absoluteExpirationRelativeToNow);
-                }
+                _ = _memoryCache.Set(key, gameId, absoluteExpirationRelativeToNow: _absoluteExpirationRelativeToNow);
             }
-            return gameId;
         }
+        return gameId;
+    }
 
-        public async ValueTask<Guid> GetGameProviderIdAsync(string gameProviderCode)
+    public async ValueTask<Guid> GetGameProviderIdAsync(string gameProviderCode)
+    {
+        var key = $"{_gameRecordInfo.GameProviderCode}:{gameProviderCode}";
+        if (!_memoryCache.TryGetValue(key, out Guid? gameProviderId))
         {
-            var key = $"{_gameRecordInfo.GameProviderCode}:{gameProviderCode}";
-            if (!_memoryCache.TryGetValue(key, out Guid? gameProviderId))
+            gameProviderId = await _utensil.GetGameProviderIdAsync(gameProviderCode).ConfigureAwait(false);
+
+            if (gameProviderId.HasValue)
             {
-                gameProviderId = await _utensil.GetGameProviderIdAsync(gameProviderCode).ConfigureAwait(false);
-
-                if (gameProviderId.HasValue)
-                {
-                    _ = _memoryCache.Set(key, gameProviderId, absoluteExpirationRelativeToNow: _absoluteExpirationRelativeToNow);
-                }
+                _ = _memoryCache.Set(key, gameProviderId, absoluteExpirationRelativeToNow: _absoluteExpirationRelativeToNow);
             }
-            return gameProviderId!.Value;
         }
+        return gameProviderId!.Value;
+    }
 
-        public async ValueTask<PlayerModel?> GetPlayerAsync(string playerCode)
+    public async ValueTask<PlayerModel?> GetPlayerAsync(string playerCode)
+    {
+        var key = $"{_gameRecordInfo.GameProviderCode}:{playerCode}";
+        if (!_memoryCache.TryGetValue(key, out PlayerModel? playerModel))
         {
-            var key = $"{_gameRecordInfo.GameProviderCode}:{playerCode}";
-            if (!_memoryCache.TryGetValue(key, out PlayerModel? playerModel))
-            {
-                playerModel = await _utensil.GetPlayerAsync(playerCode).ConfigureAwait(false);
+            playerModel = await _utensil.GetPlayerAsync(playerCode).ConfigureAwait(false);
 
-                if (playerModel == null)
-                {
-                    return null;
-                }
-                _ = _memoryCache.Set(key, playerModel, _absoluteExpirationRelativeToNow);
+            if (playerModel == null)
+            {
+                return null;
             }
-            return playerModel;
+            _ = _memoryCache.Set(key, playerModel, _absoluteExpirationRelativeToNow);
         }
+        return playerModel;
     }
 }

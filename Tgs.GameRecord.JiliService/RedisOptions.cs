@@ -1,7 +1,6 @@
-﻿namespace Tgs.GameRecord.JiliService
+﻿namespace Tgs.GameRecord.JiliService;
+
+public record RedisOptions
 {
-    public record RedisOptions
-    {
-        public string ConnectionString { get; set; } = "localhost";
-    }
+    public string ConnectionString { get; set; } = "localhost";
 }

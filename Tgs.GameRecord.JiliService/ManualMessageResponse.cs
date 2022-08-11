@@ -1,4 +1,3 @@
-﻿namespace Tgs.GameRecord.JiliService
-{
-    public record ManualMessageResponse(bool Success);
-}
+﻿namespace Tgs.GameRecord.JiliService;
+
+public record ManualMessageResponse(bool Success);

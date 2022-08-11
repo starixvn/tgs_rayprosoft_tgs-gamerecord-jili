@@ -8,9 +8,10 @@ data:
     {
       "GameRecordInfo": {
         "GameProviderCode": "JILITF",
-        "IntervalMinute": 1,
-         "PageLimit": 1000
+        "IntervalMinute": 2,
+        "PageLimit": 500
       },
+      
       "GameRecord": {
         "GameProvidersQueryServerBaseUrl": "http://game-gameprovider-queryserver/",
         "GameInterfaceJiliServiceBaseUrl": "http://game-gameinterface-jili-service:9090/"

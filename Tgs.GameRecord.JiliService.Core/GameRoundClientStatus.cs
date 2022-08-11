@@ -1,11 +1,10 @@
-﻿namespace Tgs.GameRecord.JiliService.Core
+﻿namespace Tgs.GameRecord.JiliService.Core;
+
+public enum GameRoundClientStatus
 {
-    public enum GameRoundClientStatus
-    {
-        Open = 1,
-        Void = 2,
-        Win = 3,
-        Loss = 4,
-        Draw = 5
-    }
+    Open = 1,
+    Void = 2,
+    Win = 3,
+    Loss = 4,
+    Draw = 5
 }
