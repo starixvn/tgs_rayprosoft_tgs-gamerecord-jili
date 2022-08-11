@@ -1,26 +1,25 @@
-﻿namespace Tgs.GameRecord.JiliService.Core.ApplicationServices
-{
-    public record GameRoundCommand(
-        string ExternalRoundId,
-        Guid GameProviderId,
-        string GameProviderCode,
-        string PlayerCode,
-        int GameId,
-        string ExternalGameId,
-        string CurrencyCode,
-        GameRoundStatus Status,
-        Guid GameProviderConfigurationId,
-        Guid WalletId,
-        DateTimeOffset? ExternalCreatedOn,
-        DateTimeOffset? ExternalClosedOn,
-        Guid BrandId,
-        decimal? BetAmount,
-        decimal? ValidBetAmount,
-        decimal? SettleAmount,
-        decimal? Commission,
-        decimal? Turnover,
-        decimal? PlayerWinLoss,
-        string AdditionalData,
-        GameRoundClientStatus ClientStatus,
-        bool Success);
-}
+﻿namespace Tgs.GameRecord.JiliService.Core.ApplicationServices;
+
+public record GameRoundCommand(
+    string ExternalRoundId,
+    Guid GameProviderId,
+    string GameProviderCode,
+    string PlayerCode,
+    int GameId,
+    string ExternalGameId,
+    string CurrencyCode,
+    GameRoundStatus Status,
+    Guid GameProviderConfigurationId,
+    Guid WalletId,
+    DateTimeOffset? ExternalCreatedOn,
+    DateTimeOffset? ExternalClosedOn,
+    Guid BrandId,
+    decimal? BetAmount,
+    decimal? ValidBetAmount,
+    decimal? SettleAmount,
+    decimal? Commission,
+    decimal? Turnover,
+    decimal? PlayerWinLoss,
+    string AdditionalData,
+    GameRoundClientStatus ClientStatus,
+    bool Success);
