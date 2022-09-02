@@ -85,7 +85,14 @@ namespace Tgs.GameRecord.JiliService.Core.ApplicationServices
                     Success: success));
             }
 
-            await _service.ExecuteAsync(new GameRoundBatchCommand(GameRecords: gameRecords)).ConfigureAwait(false);
+            var gameRoundBatchCommand = new GameRoundBatchCommand(
+                GameRecords: gameRecords);
+
+            await _service
+                .ExecuteAsync(
+                    gameRoundBatchCommand,
+                    cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 }

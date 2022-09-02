@@ -12,7 +12,6 @@ namespace Tgs.GameRecord.JiliService.Core.ApplicationServices
         private readonly IMessageSender _messageSender;
         private readonly GameRecordInfoOptions _gameRecordInfoOptions;
 
-
         public GameRoundBatchCommandService(
             IMessageSender messageSender,
             IOptions<GameRecordInfoOptions> options,
