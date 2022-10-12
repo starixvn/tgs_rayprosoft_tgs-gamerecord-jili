@@ -1,20 +1,34 @@
 ﻿using System.Text.Json;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using Tgs.GameInterface.JiliService.Protos;
+using Tgs.GameRounds.Common;
+using Tgs.GameRounds.Common.MessageModels;
+using Tgs.MessageQueue;
 using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.JiliService.Core.ApplicationServices;
 
 internal class GamePullRecordCommandService : ICommandService<GamePullRecordCommand>
 {
-    private readonly ICommandService<GameRoundCommand> _service;
+    private readonly GameRecordInfoOptions _gameRecordInfo;
+    private readonly ILogger<GamePullRecordCommandService> _logger;
     private readonly IUtensil _utensil;
+    private readonly IMessageSender _messageSender;
+    private readonly string _subject;
 
     public GamePullRecordCommandService(
-        ICommandService<GameRoundCommand> service,
-        IUtensil utensil)
+        ILogger<GamePullRecordCommandService> logger,
+        IOptions<GameRecordInfoOptions> options,
+        IUtensil utensil,
+        IMessageSender messageSender)
     {
-        _service = service ?? throw new ArgumentNullException(nameof(service));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _gameRecordInfo = options.Value;
         _utensil = utensil ?? throw new ArgumentNullException(nameof(utensil));
+        _messageSender = messageSender ?? throw new ArgumentNullException(nameof(messageSender));
+        _subject = _gameRecordInfo.MongoGlobPattern;
     }
 
     public async ValueTask ExecuteAsync(GamePullRecordCommand command, CancellationToken cancellationToken = default)
@@ -58,31 +72,38 @@ internal class GamePullRecordCommandService : ICommandService<GamePullRecordComm
                 record.AgentId
             };
 
-            var gameRoundCommand = new GameRoundCommand(
-                ExternalRoundId: record.WagersId,
-                GameProviderId: command.GameProviderId,
-                GameProviderCode: command.GameProviderCode,
-                PlayerCode: (playerModel == null) ? string.Empty : playerModel.PlayerCode,
-                GameId: gameId ?? -1,
-                ExternalGameId: record.GameId.ToString(),
-                CurrencyCode: (playerModel == null) ? string.Empty : playerModel.DefaultWalletCurrencyCode,
-                Status: status,
-                GameProviderConfigurationId: gameProviderConfigurationId ?? Guid.Empty,
-                WalletId: (playerModel == null) ? Guid.Empty : playerModel.DefaultWalletId,
-                ExternalCreatedOn: record.WagersTime.ToDateTimeOffset(),
-                ExternalClosedOn: record.PayoffTime.ToDateTimeOffset(),
-                BrandId: (playerModel == null) ? Guid.Empty : playerModel.BrandId,
-                BetAmount: record.BetAmount,
-                ValidBetAmount: record.BetAmount,
-                SettleAmount: record.PayoffAmount,
-                Commission: 0,
-                Turnover: record.BetAmount,
-                PlayerWinLoss: playerWinLoss,
-                AdditionalData: JsonSerializer.Serialize(additionalData),
-                ClientStatus: clientStatus,
-                Success: success);
+            var data = new GameRecordMessage(
+                            ExternalRoundId: record.WagersId,
+                            GameProviderId: command.GameProviderId,
+                            GameProviderCode: _gameRecordInfo.GameProviderCode,
+                            GameId: gameId ?? -1,
+                            ExternalGameId: record.GameId.ToString(),
+                            PlayerCode: (playerModel == null) ? string.Empty : playerModel.PlayerCode,
+                            CurrencyCode: (playerModel == null) ? string.Empty : playerModel.DefaultWalletCurrencyCode,
+                            WalletId: (playerModel == null) ? Guid.Empty : playerModel.DefaultWalletId,
+                            BrandId: (playerModel == null) ? Guid.Empty : playerModel.BrandId,
+                            GameProviderConfigurationId: gameProviderConfigurationId ?? Guid.Empty,
+                            Status: status,
+                            ClientStatus: clientStatus,
+                            ExternalCreatedOn: record.WagersTime.ToDateTimeOffset(),
+                            ExternalClosedOn: record.PayoffTime.ToDateTimeOffset(),
+                            BetAmount: record.BetAmount.ToDecimal().GetValueOrDefault(0),
+                            ValidBetAmount: record.BetAmount.ToDecimal().GetValueOrDefault(0),
+                            SettleAmount: record.PayoffAmount.ToDecimal().GetValueOrDefault(0),
+                            Commission: 0,
+                            Turnover: record.BetAmount.ToDecimal().GetValueOrDefault(0),
+                            PlayerWinLoss: playerWinLoss,
+                            AdditionalData: JsonSerializer.Serialize(additionalData),
+                            Success: success);
 
-            await _service.ExecuteAsync(gameRoundCommand, cancellationToken).ConfigureAwait(false);
+            _logger.LogInformation("LogOn:{logOn}  Subject:{subject} MessageRequest:{request}", DateTime.Now.ToString("o"), _subject, data);
+
+            await _messageSender
+                    .PublishAsync(
+                        subject: _subject,
+                        data: data.ToBson(),
+                        cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
         }
     }
 }

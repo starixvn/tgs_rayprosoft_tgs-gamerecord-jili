@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Tgs.GameRecord.JiliManualService.ViewModels;
 using Tgs.GameRecord.JiliService.Core.WorkerServices;
-using Tgs.GameRecord.JiliService.ViewModels;
 using Tgs.ServiceUtility;
 
-namespace Tgs.GameRecord.JiliService.Controllers;
+namespace Tgs.GameRecord.JiliManualService.Controllers;
 
 [ApiController]
 [Route("jilitf")]
