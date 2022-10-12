@@ -1,4 +1,4 @@
-﻿namespace Tgs.GameRecord.JiliService;
+﻿namespace Tgs.GameRecord.JiliManualService;
 
 public record ManualMessageRequest(
     Uri GameApiUrl,

@@ -47,10 +47,11 @@ Selector labels
 */}}
 {{- define "game-gamerecord-jili-service.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "game-gamerecord-jili-service.name" . }}
-app: {{ include "game-gamerecord-jili-service.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+app: {{ include "game-gamerecord-jili-service.name" . }}
 tgs.kind: game
 tgs.game.kind: gamerecord
+tgs.gameprovider.kind: jili
 {{- end }}
 
 {{/*

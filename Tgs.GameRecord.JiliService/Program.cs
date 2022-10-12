@@ -4,6 +4,7 @@ using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Tgs.GameRecord.JiliService;
+using Tgs.GameRecord.JiliService.Core;
 using Tgs.MessageQueue.MongoDB.Configuration;
 using MongoMessageQueue = MongoDB.Messaging.MessageQueue;
 
@@ -59,13 +60,15 @@ builder.Services.AddJiliServiceCore((options, sp) =>
 },
 (sp) => sp.GetRequiredService<RedisConnectionManager>().Database);
 
+var gameRecordInfo = builder.Configuration.GetSection("GameRecordInfo").Get<GameRecordInfoOptions>();
+
 builder.Services
     .AddMessageQueue()
     .AddMongoMessageQueue(config =>
     {
         _ = config
         .DefineMessageQueue(
-            "gp.gamerecord.database",
+            gameRecordInfo.MongoDefine,
             sp => new MongoMessageQueueBuilderOptions
             {
                 MessageQueue = MongoMessageQueue.Default,
@@ -80,12 +83,10 @@ builder.Services
              var configuration = sp.GetRequiredService<IConfiguration>();
              options.Url = configuration.GetConnectionString("Nats");
          })
-         .AddHandler<ScheduleMessageHandler>("gp.gamerecord.schedule.jilitf", "gp.gamerecord.schedule")
-         .AddProcessor<ManualMessageHandler>("gp.gamerecord.manual.jilitf", "gp.gamerecord.manual");
+         .AddHandler<ScheduleMessageHandler>("gp.gamerecord.schedule.jilitf", "gp.gamerecord.schedule");
      })
      .ClearAllExchanges()
-     .AddMongoGlobPatternExchange("tgs.gp.gamerecord.database.round.jilitf", "gp.gamerecord.database", "tgs.gp.gamerecord.database.round.jilitf")
-     .AddMongoGlobPatternExchange("tgs.gp.gamerecord.database.round.batch.jilitf", "gp.gamerecord.database", "tgs.gp.gamerecord.database.round.batch.jilitf");
+     .AddMongoGlobPatternExchange(gameRecordInfo.MongoGlobPattern, gameRecordInfo.MongoDefine, gameRecordInfo.MongoGlobPattern);
 
 builder.Services
      .AddSingleton<IConfigureOptions<OtlpExporterOptions>>(
@@ -119,6 +120,7 @@ builder.Services
                 || !httpContext.Request.Path.StartsWithSegments("/swagger")
                 && !httpContext.Request.Path.StartsWithSegments("/healthz")
                 && !httpContext.Request.Path.StartsWithSegments("/profiler/")
+                && !httpContext.Request.Path.StartsWithSegments("/metrics")
                 && !new[] { "html", "ico", "png", "jpg" }.Any(
                     ext => httpContext.Request.Path.Value.EndsWith($".{ext}"));
         };
