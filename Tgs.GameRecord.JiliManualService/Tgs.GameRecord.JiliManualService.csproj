@@ -1,12 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>9967ffe6-1e2e-4490-86fa-a123f581df0d</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>9967ffe6-1e2e-4490-86fa-a123f581df0d</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<GlobalNugetConfig>$(UserProfile)\AppData\Roaming\NuGet\NuGet.Config</GlobalNugetConfig>
+		<GlobalNugetConfig Condition="'$(UserProfile)'==''">$(HOME)/.nuget/NuGet/NuGet.Config</GlobalNugetConfig>
+		<DockerfileBuildArguments>--build-arg "BuildConfiguration=$(Configuration)" --secret id=nuget,src="$(GlobalNugetConfig)"</DockerfileBuildArguments>
+		<DockerfileTag Condition="$(DockerfileTag) == ''">game/gamerecord-jili-manual-service</DockerfileTag>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="FluentdForward.OpenTelemetry.MessagePack" Version="0.2.0" />
@@ -24,7 +28,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Tgs.GameRecord.JiliService.Core\Tgs.GameRecord.JiliService.Core.csproj" />
+		<ProjectReference Include="..\Tgs.GameRecord.JiliService.Core\Tgs.GameRecord.JiliService.Core.csproj" />
 	</ItemGroup>
 
 </Project>
