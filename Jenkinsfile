@@ -7,7 +7,7 @@ pipeline {
     environment {
         BuildConfiguration="Debug"
         ImageName="pgtgs/game-gamerecord-jili-service"
-        ImageManualName="pgtgs/game-gamerecord-jili-manualworkservice"
+        ImageManualName="pgtgs/game-gamerecord-jili-manualservice"
     }
 
     stages {
