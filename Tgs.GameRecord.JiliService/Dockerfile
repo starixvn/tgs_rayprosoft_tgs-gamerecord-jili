@@ -19,7 +19,7 @@ RUN dotnet build "Tgs.GameRecord.JiliService.csproj" -c $BuildConfiguration -o /
 
 FROM build AS publish
 ARG BuildConfiguration
-RUN dotnet publish "Tgs.GameRecord.JiliService.csproj" -c $BuildConfiguration -o /app/publish
+RUN dotnet publish "Tgs.GameRecord.JiliService.csproj" -c $BuildConfiguration -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

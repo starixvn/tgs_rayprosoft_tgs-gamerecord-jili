@@ -4,7 +4,7 @@ using Tgs.GameRecord.JiliService.Core.WorkerServices;
 using Tgs.MessageQueue;
 using Tgs.ServiceUtility;
 
-namespace Tgs.GameRecord.JiliService;
+namespace Tgs.GameRecord.JiliManualService;
 
 public class ManualMessageHandler : IMessageProcessor
 {
