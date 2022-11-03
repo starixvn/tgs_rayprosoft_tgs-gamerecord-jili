@@ -11,7 +11,7 @@ data:
         "MongoGlobPattern": "tgs.gp.gamerecord.database.round.jilitf",
         "GameProviderCode": "JILITF",
         "IntervalMinute": 2,
-        "PageLimit": 500
+        "PageLimit": 10000
       },
       
       "GameRecord": {
