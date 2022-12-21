@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.JiliService"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.JiliService.Core", "Tgs.GameRecord.JiliService.Core\Tgs.GameRecord.JiliService.Core.csproj", "{B83E837C-F200-4F46-901D-A628E18638A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameRecord.JiliManualService", "Tgs.GameRecord.JiliManualService\Tgs.GameRecord.JiliManualService.csproj", "{63C1434B-D2CB-46DF-8983-A33CA96E589E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.JiliManualService", "Tgs.GameRecord.JiliManualService\Tgs.GameRecord.JiliManualService.csproj", "{63C1434B-D2CB-46DF-8983-A33CA96E589E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
