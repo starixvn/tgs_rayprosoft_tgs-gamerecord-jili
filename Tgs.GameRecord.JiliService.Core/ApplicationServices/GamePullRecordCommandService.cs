@@ -14,9 +14,9 @@ internal class GamePullRecordCommandService : ICommandService<GamePullRecordComm
 {
     private readonly GameRecordInfoOptions _gameRecordInfo;
     private readonly ILogger<GamePullRecordCommandService> _logger;
-    private readonly IUtensil _utensil;
     private readonly IMessageSender _messageSender;
     private readonly string _subject;
+    private readonly IUtensil _utensil;
 
     public GamePullRecordCommandService(
         ILogger<GamePullRecordCommandService> logger,
