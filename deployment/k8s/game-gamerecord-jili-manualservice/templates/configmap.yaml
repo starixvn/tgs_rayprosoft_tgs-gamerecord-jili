@@ -1,4 +1,4 @@
-apiVersion: v1
+﻿apiVersion: v1
 kind: ConfigMap
 metadata:
   name: configmap-{{ include "game-gamerecord-jili-manualservice.name" . }}
@@ -15,7 +15,7 @@ data:
       },
       
       "GameRecord": {
-        "GameProvidersQueryServerBaseUrl": "http://game-gameprovider-queryserver/",
+        "GameCommandClientBaseUrl": "http://game-gamecommand/",
         "GameInterfaceJiliServiceBaseUrl": "http://game-gameinterface-jili-service:9090/"
       }
     }

@@ -1,14 +1,14 @@
-﻿using Tgs.GameProviders.QueryServer.Client;
-using Tgs.GameProviders.QueryServer.Models;
+﻿using Tgs.GameCommand.Client;
+using Tgs.GameCommand.Common;
 
 namespace Tgs.GameRecord.JiliService.Core;
 
 internal class UtensilRepository : IUtensil
 {
-    private readonly IGameProvidersQueryServerClient _client;
+    private readonly IGameCommandClient _client;
 
     public UtensilRepository(
-        IGameProvidersQueryServerClient client)
+        IGameCommandClient client)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
@@ -26,6 +26,6 @@ internal class UtensilRepository : IUtensil
     => await _client.GameProviderGetGameProviderIdAsync(gameProviderCode).ConfigureAwait(false)
         ?? throw new Exception($"The identifier for this game provider does not exist.({gameProviderCode})");
 
-    public ValueTask<PlayerModel?> GetPlayerAsync(string playerCode)
+    public ValueTask<PlayerInfo?> GetPlayerAsync(string playerCode)
         => _client.PlayerGetAsync(playerCode);
 }

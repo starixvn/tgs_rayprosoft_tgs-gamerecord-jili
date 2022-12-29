@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Resources;
@@ -40,7 +40,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddGameRecordJiliService((options, sp) =>
 {
     var configuration = sp.GetRequiredService<IConfiguration>();
-    options.ConnectionString = configuration.GetConnectionString("Redis");
+    options.ConnectionString = configuration.GetConnectionString("Redis")!;
 });
 
 builder.Services.AddJiliServiceCore((options, sp) =>
@@ -56,7 +56,7 @@ builder.Services.AddJiliServiceCore((options, sp) =>
 (options, sp) =>
 {
     var configuration = sp.GetRequiredService<IConfiguration>();
-    options.BaseUrl = configuration.GetValue<Uri>("GameRecord:GameProvidersQueryServerBaseUrl");
+    options.BaseUrl = configuration.GetValue<Uri>("GameRecord:GameCommandClientBaseUrl");
 },
 (sp) => sp.GetRequiredService<RedisConnectionManager>().Database);
 
@@ -72,7 +72,7 @@ builder.Services
             sp => new MongoMessageQueueBuilderOptions
             {
                 MessageQueue = MongoMessageQueue.Default,
-                ConnectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("MongoMessaging")
+                ConnectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("MongoMessaging")!
             });
     })
      .AddNatsMessageQueue(natsConfig =>
@@ -81,7 +81,7 @@ builder.Services
          .ConfigQueueOptions((options, sp) =>
          {
              var configuration = sp.GetRequiredService<IConfiguration>();
-             options.Url = configuration.GetConnectionString("Nats");
+             options.Url = configuration.GetConnectionString("Nats")!;
          })
          .AddProcessor<ManualMessageHandler>("gp.gamerecord.manual.jilitf", "gp.gamerecord.manual");
      })
@@ -120,9 +120,10 @@ builder.Services
                 || !httpContext.Request.Path.StartsWithSegments("/swagger")
                 && !httpContext.Request.Path.StartsWithSegments("/healthz")
                 && !httpContext.Request.Path.StartsWithSegments("/profiler/")
+                && !httpContext.Request.Path.StartsWithSegments("/hangfire")
                 && !httpContext.Request.Path.StartsWithSegments("/metrics")
-                && !new[] { "html", "ico", "png", "jpg" }.Any(
-                    ext => httpContext.Request.Path.Value.EndsWith($".{ext}"));
+                   && !new[] { "html", "ico", "png", "jpg" }.Any(
+                       ext => httpContext.Request.Path.Value.EndsWith($".{ext}"));
         };
     });
 

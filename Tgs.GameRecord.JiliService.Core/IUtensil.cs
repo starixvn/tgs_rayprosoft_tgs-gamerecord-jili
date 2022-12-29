@@ -1,4 +1,4 @@
-﻿using Tgs.GameProviders.QueryServer.Models;
+﻿using Tgs.GameCommand.Common;
 
 namespace Tgs.GameRecord.JiliService.Core;
 
@@ -10,5 +10,5 @@ public interface IUtensil
 
     ValueTask<Guid> GetGameProviderIdAsync(string gameProviderCode);
 
-    ValueTask<PlayerModel?> GetPlayerAsync(string playerCode);
+    ValueTask<PlayerInfo?> GetPlayerAsync(string playerCode);
 }
