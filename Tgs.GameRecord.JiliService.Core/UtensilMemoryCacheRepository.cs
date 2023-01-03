@@ -52,7 +52,7 @@ internal class UtensilMemoryCacheRepository : IUtensil
         string gameExternalId,
         CancellationToken cancellationToken = default)
     {
-        var key = $"{_gameRecordInfo.GameProviderCode}";
+        var key = $"{_gameRecordInfo.GameProviderCode}:{gameExternalId}";
         if (!_memoryCache.TryGetValue(key, out int? gameId))
         {
             gameId = await _utensil
