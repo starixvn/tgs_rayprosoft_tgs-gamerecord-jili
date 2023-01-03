@@ -36,8 +36,17 @@ internal class GamePullRecordCommandService : ICommandService<GamePullRecordComm
         foreach (var record in command.Records)
         {
             bool success = true;
-            var playerModel = await _utensil.GetPlayerAsync(record.Account).ConfigureAwait(false);
-            var gameId = await _utensil.GetGameIdAsync(command.GameProviderId, record.GameId.ToString()).ConfigureAwait(false);
+            var playerModel = await _utensil
+                .GetPlayerAsync(
+                    playerCode: record.Account,
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            var gameId = await _utensil
+                .GetGameIdAsync(
+                    gameProviderId: command.GameProviderId,
+                    gameExternalId: record.GameId.ToString(),
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
             if (playerModel == null || !gameId.HasValue)
             {
                 success = false;
@@ -46,7 +55,12 @@ internal class GamePullRecordCommandService : ICommandService<GamePullRecordComm
             Guid? gameProviderConfigurationId = default;
             if (playerModel != null)
             {
-                gameProviderConfigurationId = await _utensil.BrandGetGameProviderConfigurationIdAsync(playerModel.BrandId, command.GameProviderId).ConfigureAwait(false);
+                gameProviderConfigurationId = await _utensil
+                    .BrandGetGameProviderConfigurationIdAsync(
+                        brandId: playerModel.BrandId,
+                        gameProviderId: command.GameProviderId,
+                        cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
                 if (!gameProviderConfigurationId.HasValue)
                 {
                     success = false;

@@ -33,19 +33,24 @@ namespace Tgs.GameRecord.JiliService.Core.WorkerServices
             int page = 1;
             int pageLimit = _gameRecordInfo.PageLimit;
 
-            var gameProviderId = await _utensil.GetGameProviderIdAsync(_gameRecordInfo.GameProviderCode).ConfigureAwait(false);
+            var gameProviderId = await _utensil
+                .GetGameProviderIdAsync(
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
 
             while (true)
             {
-                var gamePullRecordReply = await _grpc.GetGamePullRecordAsync(
-                   apiUrl: command.GameApiUrl,
-                   agentId: command.GameProviderAgentId,
-                   agentKey: command.GameProviderAgentKey,
-                   startTime: command.StartTime,
-                   endTime: command.EndTime,
-                   page: page,
-                   pageLimit: pageLimit,
-                   cancellationToken: cancellationToken).ConfigureAwait(false);
+                var gamePullRecordReply = await _grpc
+                    .GetGamePullRecordAsync(
+                        apiUrl: command.GameApiUrl,
+                        agentId: command.GameProviderAgentId,
+                        agentKey: command.GameProviderAgentKey,
+                        startTime: command.StartTime,
+                        endTime: command.EndTime,
+                        page: page,
+                        pageLimit: pageLimit,
+                        cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
 
                 _logger.LogInformation("LogOn:{logOn} | Request:{request} | Response:{response}",
                     DateTime.UtcNow.ToString("O"),
@@ -62,10 +67,14 @@ namespace Tgs.GameRecord.JiliService.Core.WorkerServices
                     break;
                 }
 
-                await _service.ExecuteAsync(new GamePullRecordCommand(
-                    GameProviderId: gameProviderId,
-                    GameProviderCode: _gameRecordInfo.GameProviderCode,
-                    Records: gamePullRecordReply.Items), cancellationToken: cancellationToken).ConfigureAwait(false);
+                await _service
+                    .ExecuteAsync(
+                    new GamePullRecordCommand(
+                        GameProviderId: gameProviderId,
+                        GameProviderCode: _gameRecordInfo.GameProviderCode,
+                        Records: gamePullRecordReply.Items),
+                        cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
 
                 page++;
             }

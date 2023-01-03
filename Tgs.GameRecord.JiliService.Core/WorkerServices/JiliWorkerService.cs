@@ -33,7 +33,10 @@ internal class JiliWorkerService : ICommandService<JiliWorkerCommand>
         int page = 1;
         int pageLimit = _gameRecordInfo.PageLimit;
 
-        var gameProviderId = await _utensil.GetGameProviderIdAsync(_gameRecordInfo.GameProviderCode).ConfigureAwait(false);
+        var gameProviderId = await _utensil
+            .GetGameProviderIdAsync(
+                cancellationToken)
+            .ConfigureAwait(false);
 
         while (true)
         {
@@ -62,10 +65,12 @@ internal class JiliWorkerService : ICommandService<JiliWorkerCommand>
                 break;
             }
 
-            await _service.ExecuteAsync(new GamePullRecordCommand(
-                GameProviderId: gameProviderId,
-                GameProviderCode: _gameRecordInfo.GameProviderCode,
-                Records: gamePullRecordReply.Items), cancellationToken: cancellationToken).ConfigureAwait(false);
+            await _service.ExecuteAsync(
+                command: new GamePullRecordCommand(
+                        GameProviderId: gameProviderId,
+                        GameProviderCode: _gameRecordInfo.GameProviderCode,
+                        Records: gamePullRecordReply.Items),
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
             page++;
         }
