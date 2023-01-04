@@ -15,20 +15,21 @@ internal class GamePullRecordCommandService : ICommandService<GamePullRecordComm
     private readonly GameRecordInfoOptions _gameRecordInfo;
     private readonly ILogger<GamePullRecordCommandService> _logger;
     private readonly IMessageSender _messageSender;
-    private readonly string _subject;
+    private readonly MongoSettingOptions _mongoSetting;
     private readonly IUtensil _utensil;
 
     public GamePullRecordCommandService(
         ILogger<GamePullRecordCommandService> logger,
         IOptions<GameRecordInfoOptions> options,
+        IOptions<MongoSettingOptions> mongoSettingOptions,
         IUtensil utensil,
         IMessageSender messageSender)
     {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _gameRecordInfo = options.Value;
+        _mongoSetting = mongoSettingOptions.Value;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _utensil = utensil ?? throw new ArgumentNullException(nameof(utensil));
         _messageSender = messageSender ?? throw new ArgumentNullException(nameof(messageSender));
-        _subject = _gameRecordInfo.MongoGlobPattern;
     }
 
     public async ValueTask ExecuteAsync(GamePullRecordCommand command, CancellationToken cancellationToken = default)
@@ -56,7 +57,7 @@ internal class GamePullRecordCommandService : ICommandService<GamePullRecordComm
             if (playerModel != null)
             {
                 gameProviderConfigurationId = await _utensil
-                    .BrandGetGameProviderConfigurationIdAsync(
+                    .GetBrandGameProviderConfigurationIdAsync(
                         brandId: playerModel.BrandId,
                         gameProviderId: command.GameProviderId,
                         cancellationToken: cancellationToken)
@@ -110,11 +111,14 @@ internal class GamePullRecordCommandService : ICommandService<GamePullRecordComm
                             AdditionalData: JsonSerializer.Serialize(additionalData),
                             Success: success);
 
-            _logger.LogInformation("LogOn:{logOn}  Subject:{subject} MessageRequest:{request}", DateTime.Now.ToString("o"), _subject, data);
+            _logger.LogInformation("LogOn:{logOn}  Subject:{subject} MessageRequest:{request}",
+                DateTime.Now.ToString("o"),
+                _mongoSetting.GlobPattern,
+                data);
 
             await _messageSender
                     .PublishAsync(
-                        subject: _subject,
+                        subject: _mongoSetting.GlobPattern,
                         data: data.ToBson(),
                         cancellationToken: cancellationToken)
                     .ConfigureAwait(false);

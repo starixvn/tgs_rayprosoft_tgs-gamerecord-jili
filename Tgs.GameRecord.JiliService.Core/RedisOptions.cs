@@ -1,4 +1,4 @@
-﻿namespace Tgs.GameRecord.JiliService;
+﻿namespace Tgs.GameRecord.JiliService.Core;
 
 public record RedisOptions
 {
