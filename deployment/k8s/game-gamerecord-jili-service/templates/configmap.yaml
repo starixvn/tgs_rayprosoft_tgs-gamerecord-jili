@@ -7,10 +7,9 @@ data:
   appsettings.json: |
     {
       "GameRecordInfo": {
-        "MongoDefine": "gp.gamerecord.database",
-        "MongoGlobPattern": "tgs.gp.gamerecord.database.round.jilitf",
         "GameProviderCode": "JILITF",
         "IntervalMinute": 2,
+        "LockMinute": 1,
         "PageLimit": 10000
       },
       

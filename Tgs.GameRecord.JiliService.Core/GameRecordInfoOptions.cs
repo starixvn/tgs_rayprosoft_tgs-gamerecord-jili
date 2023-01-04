@@ -2,9 +2,9 @@
 
 public record GameRecordInfoOptions()
 {
-    public string MongoDefine { get; init; } = default!;
-    public string MongoGlobPattern { get; init; } = default!;
     public string GameProviderCode { get; set; } = default!;
-    public decimal IntervalMinute { get; set; } = 5m;
+
+    public double IntervalMinute { get; set; } = 5d;
+    public double LockMinute { get; set; } = 4d;
     public int PageLimit { get; set; } = 500;
 }
