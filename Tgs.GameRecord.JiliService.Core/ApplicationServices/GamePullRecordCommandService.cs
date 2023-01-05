@@ -87,41 +87,41 @@ internal class GamePullRecordCommandService : ICommandService<GamePullRecordComm
                 record.AgentId
             };
 
-            var data = new GameRecordMessage(
-                            ExternalRoundId: record.WagersId,
-                            GameProviderId: command.GameProviderId,
-                            GameProviderCode: _gameRecordInfo.GameProviderCode,
-                            GameId: gameId ?? -1,
-                            ExternalGameId: record.GameId.ToString(),
-                            PlayerCode: (playerModel == null) ? string.Empty : playerModel.PlayerCode,
-                            CurrencyCode: (playerModel == null) ? string.Empty : playerModel.DefaultWalletCurrencyCode,
-                            WalletId: (playerModel == null) ? Guid.Empty : playerModel.DefaultWalletId,
-                            BrandId: (playerModel == null) ? Guid.Empty : playerModel.BrandId,
-                            GameProviderConfigurationId: gameProviderConfigurationId ?? Guid.Empty,
-                            Status: status,
-                            ClientStatus: clientStatus,
-                            ExternalCreatedOn: record.WagersTime.ToDateTimeOffset(),
-                            ExternalClosedOn: record.PayoffTime.ToDateTimeOffset(),
-                            BetAmount: record.BetAmount.ToDecimal().GetValueOrDefault(0),
-                            ValidBetAmount: record.BetAmount.ToDecimal().GetValueOrDefault(0),
-                            SettleAmount: record.PayoffAmount.ToDecimal().GetValueOrDefault(0),
-                            Commission: 0,
-                            Turnover: record.BetAmount.ToDecimal().GetValueOrDefault(0),
-                            PlayerWinLoss: playerWinLoss,
-                            AdditionalData: JsonSerializer.Serialize(additionalData),
-                            Success: success);
+            var message = new GameRecordMessage(
+                ExternalRoundId: record.WagersId,
+                GameProviderId: command.GameProviderId,
+                GameProviderCode: _gameRecordInfo.GameProviderCode,
+                GameId: gameId ?? -1,
+                ExternalGameId: record.GameId.ToString(),
+                PlayerCode: (playerModel == null) ? string.Empty : playerModel.PlayerCode,
+                CurrencyCode: (playerModel == null) ? string.Empty : playerModel.DefaultWalletCurrencyCode,
+                WalletId: (playerModel == null) ? Guid.Empty : playerModel.DefaultWalletId,
+                BrandId: (playerModel == null) ? Guid.Empty : playerModel.BrandId,
+                GameProviderConfigurationId: gameProviderConfigurationId ?? Guid.Empty,
+                Status: status,
+                ClientStatus: clientStatus,
+                ExternalCreatedOn: record.WagersTime.ToDateTimeOffset(),
+                ExternalClosedOn: record.PayoffTime.ToDateTimeOffset(),
+                BetAmount: record.BetAmount.ToDecimal().GetValueOrDefault(0),
+                ValidBetAmount: record.BetAmount.ToDecimal().GetValueOrDefault(0),
+                SettleAmount: record.PayoffAmount.ToDecimal().GetValueOrDefault(0),
+                Commission: 0,
+                Turnover: record.BetAmount.ToDecimal().GetValueOrDefault(0),
+                PlayerWinLoss: playerWinLoss,
+                AdditionalData: JsonSerializer.Serialize(additionalData),
+                Success: success);
 
-            _logger.LogInformation("LogOn:{logOn}  Subject:{subject} MessageRequest:{request}",
+            _logger.LogInformation("LogOn:{logOn}  Subject:{subject} MessageRequest:{message}",
                 DateTime.Now.ToString("o"),
                 _mongoSetting.GlobPattern,
-                data);
+                message);
 
             await _messageSender
-                    .PublishAsync(
-                        subject: _mongoSetting.GlobPattern,
-                        data: data.ToBson(),
-                        cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
+                .PublishAsync(
+                    subject: _mongoSetting.GlobPattern,
+                    data: message.ToBson(),
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 }
