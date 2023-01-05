@@ -48,10 +48,7 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMemoryCache();
-
 builder.Services
-    .AddMemoryCache()
     .AddJiliServiceCore((options, sp) =>
     {
         var configuration = sp.GetRequiredService<IConfiguration>();
