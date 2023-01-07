@@ -31,7 +31,7 @@ internal class ScheduleDispatchService : ICommandService<ScheduleDispatchCommand
                 try
                 {
                     var endTime = DateTimeOffset.ParseExact(DateTimeOffset.UtcNow.ToString(@"yyyy-MM-dd\THH:mm:00K"), @"yyyy-MM-dd\THH:mm:ssK", null, styles: System.Globalization.DateTimeStyles.RoundtripKind);
-                    var startTime = endTime.AddMinutes((double)_gameRecordInfoOptions.IntervalMinute * -1);
+                    var startTime = endTime.AddMinutes(_gameRecordInfoOptions.IntervalMinutes * -1);
 
                     await _commandService.ExecuteAsync(new JiliWorkerCommand(
                          GameApiUrl: command.GameApiUrl,

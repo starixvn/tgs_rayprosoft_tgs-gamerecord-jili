@@ -15,7 +15,9 @@ public class UtensilRepositoryUnitTest
         var gameRecordInfo = Options.Create(new GameRecordInfoOptions
         {
             GameProviderCode = "JILITF",
-            IntervalMinute = 5,
+            IntervalMinutes = 5d,
+            IntervalMinutesMax = 10d,
+            IntervalMinutesMinimum = 1d,
             LockMinute = 4,
             PageLimit = 500
         });
@@ -71,7 +73,9 @@ public class UtensilRepositoryUnitTest
         var gameRecordInfo = Options.Create(new GameRecordInfoOptions
         {
             GameProviderCode = "JILITF",
-            IntervalMinute = 5,
+            IntervalMinutes = 5d,
+            IntervalMinutesMax = 10d,
+            IntervalMinutesMinimum = 1d,
             LockMinute = 4,
             PageLimit = 500
         });
@@ -127,7 +131,9 @@ public class UtensilRepositoryUnitTest
         var gameRecordInfo = Options.Create(new GameRecordInfoOptions
         {
             GameProviderCode = "JILITF",
-            IntervalMinute = 5,
+            IntervalMinutes = 5d,
+            IntervalMinutesMax = 10d,
+            IntervalMinutesMinimum = 1d,
             LockMinute = 4,
             PageLimit = 500
         });
@@ -176,7 +182,9 @@ public class UtensilRepositoryUnitTest
         var gameRecordInfo = Options.Create(new GameRecordInfoOptions
         {
             GameProviderCode = "JILITF",
-            IntervalMinute = 5,
+            IntervalMinutes = 5d,
+            IntervalMinutesMax = 10d,
+            IntervalMinutesMinimum = 1d,
             LockMinute = 4,
             PageLimit = 500
         });
@@ -216,7 +224,10 @@ public class UtensilRepositoryUnitTest
         var gameRecordInfo = Options.Create(new GameRecordInfoOptions
         {
             GameProviderCode = "JILITF",
-            IntervalMinute = 5,
+            IntervalMinutes = 5d,
+            IntervalMinutesMax = 10d,
+            IntervalMinutesMinimum = 1d,
+            LockMinute = 4,
             PageLimit = 500
         });
         var fakeClient = Substitute.For<IGameCommandClient>();
