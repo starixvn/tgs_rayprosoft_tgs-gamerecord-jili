@@ -8,17 +8,24 @@ namespace Tgs.GameRecord.JiliManualService;
 
 public class ManualMessageHandler : IMessageProcessor
 {
+    private readonly ILogger<ScheduleManualMessageHandler> _logger;
     private readonly ICommandService<JiliManualWorkerCommand> _service;
 
-    public ManualMessageHandler(ICommandService<JiliManualWorkerCommand> service)
+    public ManualMessageHandler(
+        ILogger<ScheduleManualMessageHandler> logger,
+        ICommandService<JiliManualWorkerCommand> service)
     {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _service = service ?? throw new ArgumentNullException(nameof(service));
     }
 
     public async ValueTask<ReadOnlyMemory<byte>> HandleAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
     {
         var json = Encoding.UTF8.GetString(data.Span);
-        var request = JsonSerializer.Deserialize<ManualMessageRequest>(json)!;
+        var request = JsonSerializer.Deserialize<ManualMessageRequest>(json)??
+            throw new NullReferenceException("The request data resolves to a null value");
+
+        _logger.LogInformation("LogOn:{logOn} Information Request:{receive}", DateTime.Now.ToString("o"), request);
 
         var gameRecordCommand = new JiliManualWorkerCommand(
             GameApiUrl: request.GameApiUrl,

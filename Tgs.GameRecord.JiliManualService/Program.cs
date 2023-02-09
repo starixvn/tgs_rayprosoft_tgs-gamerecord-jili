@@ -100,7 +100,10 @@ builder.Services
              options.Url = configuration.GetConnectionString("Nats")!;
          })
          .AddProcessor<ManualMessageHandler>(
-             natsSetting.Subject,
+             natsSetting.ManualSubject,
+             natsSetting.Group)
+         .AddHandler<ScheduleManualMessageHandler>(
+             natsSetting.ManualScheduleSubject,
              natsSetting.Group);
      })
      .ClearAllExchanges()
