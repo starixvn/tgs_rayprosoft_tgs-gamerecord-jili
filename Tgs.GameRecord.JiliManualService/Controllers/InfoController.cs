@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net.Sockets;
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Tgs.GameRecord.JiliService.Core;
+using System.Reflection;
 
 namespace Tgs.GameRecord.JiliManualService.Controllers
 {
@@ -15,14 +18,25 @@ namespace Tgs.GameRecord.JiliManualService.Controllers
         }
 
         [HttpGet]
-        public object Get()
+        public async Task<object> GetAsync([FromServices] IWebHostEnvironment _hostingEnvironment)
         {
+            var hostName = Dns.GetHostName();
+            var hostEntry = await Dns.GetHostEntryAsync(hostName);
+            var hostIp = Array.Find(hostEntry.AddressList,
+                x => x.AddressFamily == AddressFamily.InterNetwork);
             var gameRecordInfo = _configuration.GetSection("GameRecordInfo").Get<GameRecordInfoOptions>();
             var mongoSetting = _configuration.GetSection("MongoSetting").Get<MongoSettingOptions>();
             var natsSetting = _configuration.GetSection("NatsSetting").Get<NatsSettingOptions>();
 
             return new
             {
+                Environment.MachineName,
+                HostName = hostName,
+                HostIp = hostIp?.ToString() ?? string.Empty,
+                Environment = _hostingEnvironment.EnvironmentName,
+                OsVersion = $"{Environment.OSVersion}",
+                Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(),
+                ProcessCount = Environment.ProcessorCount,
                 gameRecordInfo,
                 mongoSetting,
                 natsSetting
