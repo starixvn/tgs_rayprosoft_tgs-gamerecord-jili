@@ -22,17 +22,22 @@ public class ScheduleManualMessageHandler : IMessageHandler
     public ValueTask HandleAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
     {
         var json = Encoding.UTF8.GetString(data.Span);
-        var request = JsonSerializer.Deserialize<ManualMessageRequest>(json) ??
+        var request = JsonSerializer.Deserialize<ScheduleManualRequest>(json) ??
             throw new NullReferenceException("The request data resolves to a null value");
 
         _logger.LogInformation("LogOn:{logOn} Information Request:{receive}", DateTime.Now.ToString("o"), request);
+
+        var endTime = DateTimeOffset.ParseExact(
+                        DateTimeOffset.UtcNow.AddHours(1).ToString(@"yyyy-MM-dd\THH:mm:00K"),
+                        @"yyyy-MM-dd\THH:mm:ssK", null, styles: System.Globalization.DateTimeStyles.RoundtripKind);
+        var startTime = endTime.AddMinutes(-5);
 
         var gameRecordCommand = new JiliManualWorkerCommand(
             GameApiUrl: request.GameApiUrl,
             GameProviderAgentId: request.GameProviderAgentId,
             GameProviderAgentKey: request.GameProviderAgentKey,
-            StartTime: request.StartTime,
-            EndTime: request.EndTime);
+            StartTime: startTime,
+            EndTime: endTime);
 
         return _service.ExecuteAsync(
             command: gameRecordCommand,
