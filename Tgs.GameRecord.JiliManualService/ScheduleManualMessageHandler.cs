@@ -28,8 +28,9 @@ public class ScheduleManualMessageHandler : IMessageHandler
         _logger.LogInformation("LogOn:{logOn} Information Request:{receive}", DateTime.Now.ToString("o"), request);
 
         var endTime = DateTimeOffset.ParseExact(
-                        DateTimeOffset.UtcNow.AddHours(1).ToString(@"yyyy-MM-dd\THH:mm:00K"),
+                        DateTimeOffset.UtcNow.AddHours(-1).ToString(@"yyyy-MM-dd\THH:mm:00K"),
                         @"yyyy-MM-dd\THH:mm:ssK", null, styles: System.Globalization.DateTimeStyles.RoundtripKind);
+
         var startTime = endTime.AddMinutes(-5);
 
         var gameRecordCommand = new JiliManualWorkerCommand(
