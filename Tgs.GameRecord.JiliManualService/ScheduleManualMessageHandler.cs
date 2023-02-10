@@ -31,17 +31,19 @@ public class ScheduleManualMessageHandler : IMessageHandler
                         DateTimeOffset.UtcNow.AddHours(-1).ToString(@"yyyy-MM-dd\THH:mm:00K"),
                         @"yyyy-MM-dd\THH:mm:ssK", null, styles: System.Globalization.DateTimeStyles.RoundtripKind);
 
-        var startTime = endTime.AddMinutes(-5);
+        var startTime = endTime.AddMinutes(-3);
 
-        var gameRecordCommand = new JiliManualWorkerCommand(
+        var command = new JiliManualWorkerCommand(
             GameApiUrl: request.GameApiUrl,
             GameProviderAgentId: request.GameProviderAgentId,
             GameProviderAgentKey: request.GameProviderAgentKey,
             StartTime: startTime,
             EndTime: endTime);
 
+        _logger.LogInformation("LogOn:{logOn} command:{command}", DateTime.Now.ToString("o"), command);
+
         return _service.ExecuteAsync(
-            command: gameRecordCommand,
+            command: command,
             cancellationToken: cancellationToken);
 
     }
