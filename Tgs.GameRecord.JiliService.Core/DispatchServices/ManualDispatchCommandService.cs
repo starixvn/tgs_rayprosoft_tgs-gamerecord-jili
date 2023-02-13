@@ -38,7 +38,7 @@ internal class ManualDispatchCommandService : ICommandService<ManualDispatchComm
         {
             try
             {
-                var endTime = DateTimeOffset.ParseExact(DateTimeOffset.UtcNow.ToString(@"yyyy-MM-dd\THH:mm:00K"), @"yyyy-MM-dd\THH:mm:ssK", null, styles: System.Globalization.DateTimeStyles.RoundtripKind);
+                var endTime = DateTimeOffset.ParseExact(DateTimeOffset.UtcNow.AddHours(-1).ToString(@"yyyy-MM-dd\THH:mm:00K"), @"yyyy-MM-dd\THH:mm:ssK", null, styles: System.Globalization.DateTimeStyles.RoundtripKind);
                 var startTime = endTime.AddMinutes(_intervalMinute * -1);
 
                 var workerCommand = new ManualWorkerCommand(
