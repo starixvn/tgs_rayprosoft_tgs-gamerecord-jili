@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Tgs.GameRecord.JiliService.Core;
-using Tgs.GameRecord.JiliService;
 
 namespace Tgs.GameRecord.JiliService.Controllers
 {

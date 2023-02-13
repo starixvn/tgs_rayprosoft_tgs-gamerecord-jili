@@ -17,7 +17,8 @@ data:
       
       "GameRecord": {
         "GameCommandClientBaseUrl": "http://game-gamecommand/",
-        "GameInterfaceJiliServiceBaseUrl": "http://game-gameinterface-jili-service:9090/"
+        "GameRoundsClientBaseUrl": "http://game-gamerounds/",
+        "GameInterfaceBaseUrl": "http://game-gameinterface-jili-service:9090/"
       }
     }
   monitor.settings.json: |

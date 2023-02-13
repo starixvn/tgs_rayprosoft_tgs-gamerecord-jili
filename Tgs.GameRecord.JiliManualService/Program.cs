@@ -49,7 +49,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services
-    .AddJiliServiceCore((options, sp) =>
+    .AddGameRecordCore((options, sp) =>
     {
         var configuration = sp.GetRequiredService<IConfiguration>();
         options.ConnectionString = configuration.GetConnectionString("Redis")!;
@@ -67,12 +67,17 @@ builder.Services
     (options, sp) =>
     {
         var configuration = sp.GetRequiredService<IConfiguration>();
-        options.BaseUrl = configuration.GetValue<Uri>("GameRecord:GameInterfaceJiliServiceBaseUrl");
+        options.BaseUrl = configuration.GetValue<Uri>("GameRecord:GameCommandClientBaseUrl");
     },
     (options, sp) =>
     {
         var configuration = sp.GetRequiredService<IConfiguration>();
-        options.BaseUrl = configuration.GetValue<Uri>("GameRecord:GameCommandClientBaseUrl");
+        options.BaseUrl = configuration.GetValue<Uri>("GameRecord:GameRoundsClientBaseUrl");
+    },
+    (options, sp) =>
+    {
+        var configuration = sp.GetRequiredService<IConfiguration>();
+        options.BaseUrl = configuration.GetValue<Uri>("GameRecord:GameInterfaceBaseUrl");
     });
 
 var mongoSetting = builder.Configuration.GetSection("MongoSetting").Get<MongoSettingOptions>();

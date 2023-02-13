@@ -2,18 +2,20 @@
 using Tgs.GameCommand.Client;
 using Tgs.GameInterface.JiliService.Client;
 using Tgs.GameRecord.JiliService.Core;
+using Tgs.GameRounds.Client;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddJiliServiceCore(
+    public static IServiceCollection AddGameRecordCore(
         this IServiceCollection services,
         Action<RedisOptions, IServiceProvider> redisDBconfigure,
         Action<GameRecordInfoOptions, IServiceProvider> gameRecordInfoOptions,
         Action<MongoSettingOptions, IServiceProvider> mongoSettingOptions,
-        Action<GameInterfaceJiliServiceClientOptions, IServiceProvider> gameInterfaceJiliServiceClientOptions,
-        Action<GameCommandClientOptions, IServiceProvider> gameCommandClientOptions)
+        Action<GameCommandClientOptions, IServiceProvider> gameCommandClientOption,
+        Action<GameRoundsClientOptions, IServiceProvider> gameRoundsClientOption,
+        Action<GameInterfaceJiliServiceClientOptions, IServiceProvider> gameInterfaceJiliServiceClientOption)
         => services
             .AddOptions<RedisOptions>()
             .Configure(redisDBconfigure)
@@ -29,8 +31,9 @@ public static class ServiceCollectionExtensions
                 ServiceLifetime.Transient)
             .AddMemoryCache()
             .AddSingleton<RedisConnectionManager>()
-            .AddGameInterfaceJiliServiceClient(gameInterfaceJiliServiceClientOptions)
-            .AddGameCommandClient(gameCommandClientOptions)
-            .AddTransient<IScheduleDispatch>(sp => ActivatorUtilities.CreateInstance<ScheduleDispatch>(sp, sp.GetRequiredService<RedisConnectionManager>().Database))
+            .AddGameCommandClient(gameCommandClientOption)
+            .AddGameRoundsClient(gameRoundsClientOption)
+            .AddGameInterfaceJiliServiceClient(gameInterfaceJiliServiceClientOption)
+            .AddTransient<IDispatchLock>(sp => ActivatorUtilities.CreateInstance<DispatchLock>(sp, sp.GetRequiredService<RedisConnectionManager>().Database))
             .AddTransient<IUtensil>(sp => ActivatorUtilities.CreateInstance<UtensilRepository>(sp, TimeSpan.FromHours(1)));
 }

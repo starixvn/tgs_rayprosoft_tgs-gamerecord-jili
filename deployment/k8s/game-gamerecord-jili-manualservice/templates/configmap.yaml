@@ -8,16 +8,17 @@ data:
     {
       "GameRecordInfo": {
         "GameProviderCode": "JILITF",
-        "IntervalMinutes": 2,
+        "IntervalMinutes": 5,
         "IntervalMinutesMax": 10,
         "IntervalMinutesMinimum": 1,
-        "LockMinute": 1,
+        "LockMinute": 3,
         "PageLimit": 10000
       },
       
       "GameRecord": {
         "GameCommandClientBaseUrl": "http://game-gamecommand/",
-        "GameInterfaceJiliServiceBaseUrl": "http://game-gameinterface-jili-service:9090/"
+        "GameRoundsClientBaseUrl": "http://game-gamerounds/",
+        "GameInterfaceBaseUrl": "http://game-gameinterface-jili-service:9090/"
       }
     }
   monitor.settings.json: |

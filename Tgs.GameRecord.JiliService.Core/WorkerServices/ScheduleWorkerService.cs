@@ -6,37 +6,29 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.JiliService.Core.WorkerServices;
 
-internal class JiliWorkerService : ICommandService<JiliWorkerCommand>
+internal class ScheduleWorkerService : ICommandService<ScheduleWorkerCommand>
 {
     private readonly GameRecordInfoOptions _gameRecordInfo;
     private readonly IGameInterfaceJiliServiceGrpc _grpc;
-    private readonly ILogger<JiliWorkerService> _logger;
-    private readonly ICommandService<GamePullRecordCommand> _service;
-    private readonly IUtensil _utensil;
+    private readonly ILogger<ScheduleWorkerService> _logger;
+    private readonly ICommandService<SettlementCommand> _service;
 
-    public JiliWorkerService(
+    public ScheduleWorkerService(
         IOptions<GameRecordInfoOptions> options,
         IGameInterfaceJiliServiceGrpc grpc,
-        ILogger<JiliWorkerService> logger,
-        IUtensil utensil,
-        ICommandService<GamePullRecordCommand> service)
+        ILogger<ScheduleWorkerService> logger,
+        ICommandService<SettlementCommand> service)
     {
         _gameRecordInfo = options.Value;
         _grpc = grpc ?? throw new ArgumentNullException(nameof(grpc));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _utensil = utensil ?? throw new ArgumentNullException(nameof(utensil));
         _service = service ?? throw new ArgumentNullException(nameof(service));
     }
 
-    public async ValueTask ExecuteAsync(JiliWorkerCommand command, CancellationToken cancellationToken = default)
+    public async ValueTask ExecuteAsync(ScheduleWorkerCommand command, CancellationToken cancellationToken = default)
     {
         int page = 1;
         int pageLimit = _gameRecordInfo.PageLimit;
-
-        var gameProviderId = await _utensil
-            .GetGameProviderIdAsync(
-                cancellationToken)
-            .ConfigureAwait(false);
 
         while (true)
         {
@@ -66,9 +58,7 @@ internal class JiliWorkerService : ICommandService<JiliWorkerCommand>
             }
 
             await _service.ExecuteAsync(
-                command: new GamePullRecordCommand(
-                        GameProviderId: gameProviderId,
-                        GameProviderCode: _gameRecordInfo.GameProviderCode,
+                command: new SettlementCommand(
                         Records: gamePullRecordReply.Items),
                 cancellationToken: cancellationToken).ConfigureAwait(false);
 
