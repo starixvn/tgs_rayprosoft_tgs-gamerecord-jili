@@ -32,8 +32,6 @@ public class ScheduleManualMessageHandler : IMessageHandler
             GameProviderAgentId: request.GameProviderAgentId,
             GameProviderAgentKey: request.GameProviderAgentKey);
 
-        _logger.LogInformation("LogOn:{logOn} command:{command}", DateTime.Now.ToString("o"), command);
-
         return _service.ExecuteAsync(
             command: command,
             cancellationToken: cancellationToken);

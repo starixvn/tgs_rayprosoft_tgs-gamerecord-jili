@@ -23,19 +23,18 @@ internal class ScheduleMessageHandler : IMessageHandler
     public ValueTask HandleAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
     {
         var json = Encoding.UTF8.GetString(data.Span);
-        var messageModel = JsonSerializer.Deserialize<ScheduleMessageModel>(json);
+        var request = JsonSerializer.Deserialize<ScheduleMessageModel>(json) ??
+            throw new NullReferenceException("The request data resolves to a null value");
 
-        if (messageModel == null)
-        {
-            _logger.LogError("Information Received:{LogInfo}", messageModel);
-            return ValueTask.CompletedTask;
-        }
+        _logger.LogInformation("LogOn:{logOn} Information Request:{receive}", DateTime.Now.ToString("o"), request);
 
-        _logger.LogInformation("Information Received:{LogInfo}", messageModel);
+        var command = new ScheduleDispatchCommand(
+            GameApiUrl: request.GameApiUrl,
+            GameProviderAgentId: request.GameProviderAgentId,
+            GameProviderAgentKey: request.GameProviderAgentKey);
 
-        return _service.ExecuteAsync(new ScheduleDispatchCommand(
-            GameApiUrl: messageModel.GameApiUrl,
-            GameProviderAgentId: messageModel.GameProviderAgentId,
-            GameProviderAgentKey: messageModel.GameProviderAgentKey), cancellationToken);
+        return _service.ExecuteAsync(
+            command: command,
+            cancellationToken: cancellationToken);
     }
 }
