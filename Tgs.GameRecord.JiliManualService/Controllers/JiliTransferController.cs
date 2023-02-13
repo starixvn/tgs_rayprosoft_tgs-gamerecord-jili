@@ -11,9 +11,9 @@ public class JiliTransferController : ControllerBase
 {
     [HttpPost]
     public ValueTask ExecuteAsync(
-        [FromServices] ICommandService<ScheduleWorkerCommand> service,
+        [FromServices] ICommandService<ManualWorkerCommand> service,
         GameRecordQueryViewModel model)
-        => service.ExecuteAsync(new ScheduleWorkerCommand(
+        => service.ExecuteAsync(new ManualWorkerCommand(
             GameApiUrl: model.GameApiUrl,
             GameProviderAgentId: model.GameProviderAgentId,
             GameProviderAgentKey: model.GameProviderAgentKey,
