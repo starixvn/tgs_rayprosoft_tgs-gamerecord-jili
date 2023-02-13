@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameRecord.JiliService.Core.WorkerServices
 {
-    public record JiliManualWorkerCommand(
+    public record ManualWorkerCommand(
         Uri GameApiUrl,
         string GameProviderAgentId,
         string GameProviderAgentKey,

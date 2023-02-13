@@ -1,5 +1,4 @@
-﻿using Tgs.GameRecord.JiliService.Core;
-namespace Tgs.GameRecord.JiliService;
+﻿namespace Tgs.GameRecord.JiliService;
 
 public record NatsSettingOptions
 {

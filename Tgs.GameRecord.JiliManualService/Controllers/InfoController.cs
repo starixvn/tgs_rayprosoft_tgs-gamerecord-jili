@@ -1,8 +1,8 @@
-﻿using System.Net.Sockets;
-using System.Net;
+﻿using System.Net;
+using System.Net.Sockets;
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Tgs.GameRecord.JiliService.Core;
-using System.Reflection;
 
 namespace Tgs.GameRecord.JiliManualService.Controllers
 {

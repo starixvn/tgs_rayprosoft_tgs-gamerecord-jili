@@ -6,37 +6,29 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.JiliService.Core.WorkerServices
 {
-    internal class JiliManualWorkerService : ICommandService<JiliManualWorkerCommand>
+    internal class ManualWorkerService : ICommandService<ManualWorkerCommand>
     {
         private readonly GameRecordInfoOptions _gameRecordInfo;
         private readonly IGameInterfaceJiliServiceGrpc _grpc;
-        private readonly ILogger<JiliManualWorkerService> _logger;
-        private readonly ICommandService<GamePullRecordCommand> _service;
-        private readonly IUtensil _utensil;
+        private readonly ILogger<ManualWorkerService> _logger;
+        private readonly ICommandService<SettlementCommand> _service;
 
-        public JiliManualWorkerService(
+        public ManualWorkerService(
             IOptions<GameRecordInfoOptions> options,
             IGameInterfaceJiliServiceGrpc grpc,
-            ILogger<JiliManualWorkerService> logger,
-            IUtensil utensil,
-            ICommandService<GamePullRecordCommand> service)
+            ILogger<ManualWorkerService> logger,
+            ICommandService<SettlementCommand> service)
         {
             _gameRecordInfo = options.Value;
             _grpc = grpc ?? throw new ArgumentNullException(nameof(grpc));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _utensil = utensil ?? throw new ArgumentNullException(nameof(utensil));
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async ValueTask ExecuteAsync(JiliManualWorkerCommand command, CancellationToken cancellationToken = default)
+        public async ValueTask ExecuteAsync(ManualWorkerCommand command, CancellationToken cancellationToken = default)
         {
             int page = 1;
             int pageLimit = _gameRecordInfo.PageLimit;
-
-            var gameProviderId = await _utensil
-                .GetGameProviderIdAsync(
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
 
             while (true)
             {
@@ -69,9 +61,7 @@ namespace Tgs.GameRecord.JiliService.Core.WorkerServices
 
                 await _service
                     .ExecuteAsync(
-                    new GamePullRecordCommand(
-                        GameProviderId: gameProviderId,
-                        GameProviderCode: _gameRecordInfo.GameProviderCode,
+                    new SettlementCommand(
                         Records: gamePullRecordReply.Items),
                         cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
