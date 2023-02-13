@@ -11,13 +11,13 @@ namespace Tgs.GameRecord.JiliService.Core.WorkerServices
         private readonly GameRecordInfoOptions _gameRecordInfo;
         private readonly IGameInterfaceJiliServiceGrpc _grpc;
         private readonly ILogger<ManualWorkerService> _logger;
-        private readonly ICommandService<SettlementCommand> _service;
+        private readonly ICommandService<ManualSettlementCommand> _service;
 
         public ManualWorkerService(
             IOptions<GameRecordInfoOptions> options,
             IGameInterfaceJiliServiceGrpc grpc,
             ILogger<ManualWorkerService> logger,
-            ICommandService<SettlementCommand> service)
+            ICommandService<ManualSettlementCommand> service)
         {
             _gameRecordInfo = options.Value;
             _grpc = grpc ?? throw new ArgumentNullException(nameof(grpc));
@@ -61,7 +61,7 @@ namespace Tgs.GameRecord.JiliService.Core.WorkerServices
 
                 await _service
                     .ExecuteAsync(
-                    new SettlementCommand(
+                    new ManualSettlementCommand(
                         Records: gamePullRecordReply.Items),
                         cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
