@@ -126,6 +126,16 @@ internal class ManualSettlementCommandService : ICommandService<ManualSettlement
                             source: gameRoundChecking,
                             cancellationToken: cancellationToken)
                         .ConfigureAwait(false);
+
+                    if (checkingStatus == GameRoundCheckingStatus.Change)
+                    {
+                        _logger.LogWarning("LogOn:{logOn} ExternalRoundId:{externalRoundId} PlayerCode:{playerCode} GameRoundChecking:{gameRoundChecking} CheckingStatus:{checkingStatus}",
+                             DateTime.Now.ToString("o"),
+                             gameRoundChecking.ExternalRoundId,
+                             gameRoundChecking.PlayerCode,
+                             gameRoundChecking,
+                             checkingStatus);
+                    }
                 }
 
                 if (checkingStatus == GameRoundCheckingStatus.Change)
