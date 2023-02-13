@@ -128,41 +128,44 @@ internal class ManualSettlementCommandService : ICommandService<ManualSettlement
                         .ConfigureAwait(false);
                 }
 
-                var message = new GameRecordMessage(
-                    ExternalRoundId: record.WagersId,
-                    GameProviderId: gameProviderId,
-                    GameProviderCode: _gameRecordInfo.GameProviderCode,
-                    GameId: gameId ?? -1,
-                    ExternalGameId: record.GameId.ToString(),
-                    PlayerCode: (playerModel == null) ? string.Empty : playerModel.PlayerCode,
-                    CurrencyCode: (playerModel == null) ? string.Empty : playerModel.DefaultWalletCurrencyCode,
-                    WalletId: (playerModel == null) ? Guid.Empty : playerModel.DefaultWalletId,
-                    BrandId: (playerModel == null) ? Guid.Empty : playerModel.BrandId,
-                    GameProviderConfigurationId: gameProviderConfigurationId ?? Guid.Empty,
-                    Status: status,
-                    ClientStatus: clientStatus,
-                    ExternalCreatedOn: record.WagersTime.ToDateTimeOffset(),
-                    ExternalClosedOn: record.PayoffTime.ToDateTimeOffset(),
-                    BetAmount: record.BetAmount.ToDecimal().GetValueOrDefault(0),
-                    ValidBetAmount: record.BetAmount.ToDecimal().GetValueOrDefault(0),
-                    SettleAmount: record.PayoffAmount.ToDecimal().GetValueOrDefault(0),
-                    Commission: 0,
-                    Turnover: record.BetAmount.ToDecimal().GetValueOrDefault(0),
-                    PlayerWinLoss: playerWinLoss,
-                    AdditionalData: JsonSerializer.Serialize(additionalData),
-                    Success: success);
+                if (checkingStatus == GameRoundCheckingStatus.Change)
+                {
+                    var message = new GameRecordMessage(
+                        ExternalRoundId: record.WagersId,
+                        GameProviderId: gameProviderId,
+                        GameProviderCode: _gameRecordInfo.GameProviderCode,
+                        GameId: gameId ?? -1,
+                        ExternalGameId: record.GameId.ToString(),
+                        PlayerCode: (playerModel == null) ? string.Empty : playerModel.PlayerCode,
+                        CurrencyCode: (playerModel == null) ? string.Empty : playerModel.DefaultWalletCurrencyCode,
+                        WalletId: (playerModel == null) ? Guid.Empty : playerModel.DefaultWalletId,
+                        BrandId: (playerModel == null) ? Guid.Empty : playerModel.BrandId,
+                        GameProviderConfigurationId: gameProviderConfigurationId ?? Guid.Empty,
+                        Status: status,
+                        ClientStatus: clientStatus,
+                        ExternalCreatedOn: record.WagersTime.ToDateTimeOffset(),
+                        ExternalClosedOn: record.PayoffTime.ToDateTimeOffset(),
+                        BetAmount: record.BetAmount.ToDecimal().GetValueOrDefault(0),
+                        ValidBetAmount: record.BetAmount.ToDecimal().GetValueOrDefault(0),
+                        SettleAmount: record.PayoffAmount.ToDecimal().GetValueOrDefault(0),
+                        Commission: 0,
+                        Turnover: record.BetAmount.ToDecimal().GetValueOrDefault(0),
+                        PlayerWinLoss: playerWinLoss,
+                        AdditionalData: JsonSerializer.Serialize(additionalData),
+                        Success: success);
 
-                _logger.LogInformation("LogOn:{logOn}  Subject:{subject} MessageRequest:{message}",
-                    DateTime.Now.ToString("o"),
-                    _mongoSetting.GlobPattern,
-                    message);
+                    _logger.LogInformation("LogOn:{logOn}  Subject:{subject} MessageRequest:{message}",
+                        DateTime.Now.ToString("o"),
+                        _mongoSetting.GlobPattern,
+                        message);
 
-                await _messageSender
-                    .PublishAsync(
-                        subject: _mongoSetting.GlobPattern,
-                        data: message.ToBson(),
-                        cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
+                    await _messageSender
+                        .PublishAsync(
+                            subject: _mongoSetting.GlobPattern,
+                            data: message.ToBson(),
+                            cancellationToken: cancellationToken)
+                        .ConfigureAwait(false);
+                }
             }
             catch (Exception ex)
             {
