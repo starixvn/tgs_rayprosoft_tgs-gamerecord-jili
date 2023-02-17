@@ -6,6 +6,11 @@ metadata:
 data:
   appsettings.json: |
     {
+      "Logging": {
+         "LogLevel": {
+          "Default": "Warning"
+          }
+      },
       "GameRecordInfo": {
         "GameProviderCode": "JILITF",
         "IntervalMinutes": 2,
@@ -14,7 +19,6 @@ data:
         "LockMinute": 1,
         "PageLimit": 10000
       },
-      
       "GameRecord": {
         "GameCommandClientBaseUrl": "http://game-gamecommand/",
         "GameRoundsClientBaseUrl": "http://game-gamerounds/",
