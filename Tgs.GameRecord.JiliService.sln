@@ -14,9 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.JiliService"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.JiliService.Core", "Tgs.GameRecord.JiliService.Core\Tgs.GameRecord.JiliService.Core.csproj", "{B83E837C-F200-4F46-901D-A628E18638A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.JiliManualService", "Tgs.GameRecord.JiliManualService\Tgs.GameRecord.JiliManualService.csproj", "{63C1434B-D2CB-46DF-8983-A33CA96E589E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameRecord.JiliService.Core.UnitTest", "Tgs.GameRecord.JiliService.Core.UnitTest\Tgs.GameRecord.JiliService.Core.UnitTest.csproj", "{EB4DA92B-62CE-4EFF-B682-B96C4DDFB037}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.JiliService.Core.UnitTest", "Tgs.GameRecord.JiliService.Core.UnitTest\Tgs.GameRecord.JiliService.Core.UnitTest.csproj", "{EB4DA92B-62CE-4EFF-B682-B96C4DDFB037}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,10 +30,6 @@ Global
 		{B83E837C-F200-4F46-901D-A628E18638A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B83E837C-F200-4F46-901D-A628E18638A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B83E837C-F200-4F46-901D-A628E18638A9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{63C1434B-D2CB-46DF-8983-A33CA96E589E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{63C1434B-D2CB-46DF-8983-A33CA96E589E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{63C1434B-D2CB-46DF-8983-A33CA96E589E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{63C1434B-D2CB-46DF-8983-A33CA96E589E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EB4DA92B-62CE-4EFF-B682-B96C4DDFB037}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EB4DA92B-62CE-4EFF-B682-B96C4DDFB037}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB4DA92B-62CE-4EFF-B682-B96C4DDFB037}.Release|Any CPU.ActiveCfg = Release|Any CPU
