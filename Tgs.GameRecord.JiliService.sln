@@ -3,13 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C00D7F0C-2FE3-4ECB-891F-F7C4F901B3E0}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		CodeMaid.config = CodeMaid.config
-		nuget.config = nuget.config
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.JiliService", "Tgs.GameRecord.JiliService\Tgs.GameRecord.JiliService.csproj", "{E8813BA6-6840-4E0A-8BDC-8A71EB55686C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.JiliService.Core", "Tgs.GameRecord.JiliService.Core\Tgs.GameRecord.JiliService.Core.csproj", "{B83E837C-F200-4F46-901D-A628E18638A9}"
