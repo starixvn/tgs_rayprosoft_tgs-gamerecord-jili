@@ -1,22 +1,22 @@
 ﻿using System.Text.Json;
 using Tgs.GameInterface.JiliService.Protos;
-using Tgs.GameRounds.Work.Manual.Client;
-using Tgs.GameRounds.Work.Manual.Common.Protos;
+using Tgs.GameRounds.Work.Client;
+using Tgs.GameRounds.Work.Common.Protos;
 using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.JiliService.Core.ApplicationServices;
 
-internal class ManualHandleRecordCommandService : ICommandService<ManualHandleRecordCommand>
+internal class HandleRecordCommandService : ICommandService<HandleRecordCommand>
 {
-    private readonly IGameRoundsWorkManualClient _client;
+    private readonly IGameRoundsWorkClient _client;
 
-    public ManualHandleRecordCommandService(
-        IGameRoundsWorkManualClient client)
+    public HandleRecordCommandService(
+        IGameRoundsWorkClient client)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
-    public async ValueTask ExecuteAsync(ManualHandleRecordCommand command, CancellationToken cancellationToken = default)
+    public async ValueTask ExecuteAsync(HandleRecordCommand command, CancellationToken cancellationToken = default)
     {
         if (command.Record.Success)
         {

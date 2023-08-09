@@ -2,4 +2,4 @@
 
 namespace Tgs.GameRecord.JiliService.Core.ApplicationServices;
 
-public record ManualHandleRecordCommand(RecordInfo Record);
+public record HandleRecordCommand(RecordInfo Record);

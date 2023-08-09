@@ -3,20 +3,19 @@ using NSubstitute;
 using Tgs.GameInterface.JiliService.Protos;
 using Tgs.GameRecord.JiliService.Core.ApplicationServices;
 using Tgs.GameRecord.JiliService.Core.Models;
-
-using Tgs.GameRounds.Work.Manual.Client;
-using Tgs.GameRounds.Work.Manual.Common.Protos;
+using Tgs.GameRounds.Work.Client;
+using Tgs.GameRounds.Work.Common.Protos;
 
 namespace Tgs.GameRecord.JiliService.Core.UnitTest.ApplicationServices;
 
-public class ManualHandleRecordCommandServiceUnitTest
+public class HandleRecordCommandServiceUnitTest
 {
     [Fact]
     public async void Normal_Process_Settlement_Loss()
     {
-        var fakeClient = Substitute.For<IGameRoundsWorkManualClient>();
+        var fakeClient = Substitute.For<IGameRoundsWorkClient>();
 
-        var command = new ManualHandleRecordCommand(
+        var command = new HandleRecordCommand(
             Record: new RecordInfo(
                 Success: true,
                 GameProviderId: Guid.NewGuid(),
@@ -41,7 +40,7 @@ public class ManualHandleRecordCommandServiceUnitTest
                 AdditionalData: "{\"Account\":\"4uiuj5ovw7zk\",\"WagersId\":1680840597057153115,\"GameId\":115,\"WagersTime\":\"2023-04-17T21:02:09-04:00\",\"BetAmount\":-1,\"PayoffTime\":\"2023-04-17T21:02:09-04:00\",\"PayoffAmount\":0,\"Status\":2,\"SettlementTime\":\"2023-04-17T21:02:09-04:00\",\"GameCategoryId\":1,\"VersionKey\":0,\"Type\":1,\"AgentId\":\"PG_GPI_CNY\",\"Turnover\":1}"
                 ));
 
-        var service = new ManualHandleRecordCommandService(fakeClient);
+        var service = new HandleRecordCommandService(fakeClient);
 
         await service
             .ExecuteAsync(
@@ -79,9 +78,9 @@ public class ManualHandleRecordCommandServiceUnitTest
     [Fact]
     public async void Normal_Process_Settlement_Win()
     {
-        var fakeClient = Substitute.For<IGameRoundsWorkManualClient>();
+        var fakeClient = Substitute.For<IGameRoundsWorkClient>();
 
-        var command = new ManualHandleRecordCommand(
+        var command = new HandleRecordCommand(
             Record: new RecordInfo(
                 Success: true,
                 GameProviderId: Guid.NewGuid(),
@@ -106,7 +105,7 @@ public class ManualHandleRecordCommandServiceUnitTest
                 AdditionalData: "{\"Account\":\"4uiuj5ovw7zk\",\"WagersId\":1680840597057143115,\"GameId\":115,\"WagersTime\":\"2023-04-17T21:02:01-04:00\",\"BetAmount\":-1,\"PayoffTime\":\"2023-04-17T21:02:01-04:00\",\"PayoffAmount\":3.4,\"Status\":1,\"SettlementTime\":\"2023-04-17T21:02:01-04:00\",\"GameCategoryId\":1,\"VersionKey\":0,\"Type\":1,\"AgentId\":\"PG_GPI_CNY\",\"Turnover\":1}"
                 ));
 
-        var service = new ManualHandleRecordCommandService(fakeClient);
+        var service = new HandleRecordCommandService(fakeClient);
 
         await service
             .ExecuteAsync(
@@ -144,9 +143,9 @@ public class ManualHandleRecordCommandServiceUnitTest
     [Fact]
     public async void Normal_Process_Success_Is_False()
     {
-        var fakeClient = Substitute.For<IGameRoundsWorkManualClient>();
+        var fakeClient = Substitute.For<IGameRoundsWorkClient>();
 
-        var command = new ManualHandleRecordCommand(
+        var command = new HandleRecordCommand(
             Record: new RecordInfo(
                 Success: false,
                 GameProviderId: Guid.NewGuid(),
@@ -171,7 +170,7 @@ public class ManualHandleRecordCommandServiceUnitTest
                 AdditionalData: "{\"Account\":\"4uiuj5ovw7zk\",\"WagersId\":1680840597057153115,\"GameId\":115,\"WagersTime\":\"2023-04-17T21:02:09-04:00\",\"BetAmount\":-1,\"PayoffTime\":\"2023-04-17T21:02:09-04:00\",\"PayoffAmount\":0,\"Status\":2,\"SettlementTime\":\"2023-04-17T21:02:09-04:00\",\"GameCategoryId\":1,\"VersionKey\":0,\"Type\":1,\"AgentId\":\"PG_GPI_CNY\",\"Turnover\":1}"
                 ));
 
-        var service = new ManualHandleRecordCommandService(fakeClient);
+        var service = new HandleRecordCommandService(fakeClient);
 
         await service
             .ExecuteAsync(
