@@ -25,40 +25,26 @@ internal class GameRecordUtensil : IGameRecordUtensil
         var gameProviderCode = _utensil
             .GetGameProviderCode();
 
-        bool success = true;
-
         var player = await _utensil
             .GetPlayerAsync(
-                playerCode: source.Account,
-                cancellationToken: cancellationToken)
+            playerCode: source.Account,
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         var gameId = await _utensil
             .GetGameIdAsync(
-                gameProviderId: gameProviderId,
-                gameExternalId: source.GameId.ToString(),
-                cancellationToken: cancellationToken)
+            gameProviderId: gameProviderId,
+            gameExternalId: source.GameId.ToString(),
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        if (player == null || !gameId.HasValue)
-        {
-            success = false;
-        }
+        var gameProviderConfigurationId = await _utensil
+            .GetBrandGameProviderConfigurationIdAsync(
+            brandId: player.BrandId,
+            gameProviderId: gameProviderId,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-        Guid? gameProviderConfigurationId = default;
-        if (player != null)
-        {
-            gameProviderConfigurationId = await _utensil
-                .GetBrandGameProviderConfigurationIdAsync(
-                    brandId: player.BrandId,
-                    gameProviderId: gameProviderId,
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            if (!gameProviderConfigurationId.HasValue)
-            {
-                success = false;
-            }
-        }
         var externalCreatedOn = source.WagersTime.ToDateTimeOffset();
         var externalClosedOn = source.PayoffTime.ToDateTimeOffset();
         var bet = source.BetAmount.ToDecimal().GetValueOrDefault(0);
@@ -69,17 +55,16 @@ internal class GameRecordUtensil : IGameRecordUtensil
         var winLoss = source.PayoffAmount.ToDecimal().GetValueOrDefault(0) - source.BetAmount.ToDecimal().GetValueOrDefault(0);
 
         return new RecordInfo(
-            Success: success,
             GameProviderId: gameProviderId,
             GameProviderCode: gameProviderCode,
             ExternalRoundId: source.WagersId,
-            GameId: gameId ?? -1,
+            GameId: gameId,
             ExternalGameId: source.GameId.ToString(),
-            PlayerCode: (player == null) ? string.Empty : player.PlayerCode,
-            WalletId: (player == null) ? Guid.Empty : player.DefaultWalletId,
-            CurrencyCode: (player == null) ? string.Empty : player.DefaultWalletCurrencyCode,
-            BrandId: (player == null) ? Guid.Empty : player.BrandId,
-            GameProviderConfigurationId: gameProviderConfigurationId ?? Guid.Empty,
+            PlayerCode: player.PlayerCode,
+            WalletId: player.DefaultWalletId,
+            CurrencyCode: player.DefaultWalletCurrencyCode,
+            BrandId: player.BrandId,
+            GameProviderConfigurationId: gameProviderConfigurationId,
             Status: source.Status,
             ExternalCreatedOn: externalCreatedOn,
             ExternalClosedOn: externalClosedOn,

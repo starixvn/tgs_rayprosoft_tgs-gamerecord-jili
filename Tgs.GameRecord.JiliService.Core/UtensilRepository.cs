@@ -24,56 +24,51 @@ internal class UtensilRepository : IUtensil
         _absoluteExpirationRelativeToNow = absoluteExpirationRelativeToNow;
     }
 
-    public async ValueTask<Guid?> GetBrandGameProviderConfigurationIdAsync(
+    public async ValueTask<Guid> GetBrandGameProviderConfigurationIdAsync(
         Guid brandId,
         Guid gameProviderId,
         CancellationToken cancellationToken = default)
     {
         var key = $"gamerecord:{_gameRecordInfo.GameProviderCode}:{brandId}:{gameProviderId}";
 
-        if (!_memoryCache.TryGetValue(key, out Guid? gameProviderConfigurationId))
+        if (!_memoryCache.TryGetValue(key, out Guid gameProviderConfigurationId))
         {
             gameProviderConfigurationId = await _client
                 .BrandGetGameProviderConfigurationIdAsync(
                     brandId: brandId,
                     gameProviderId: gameProviderId,
                     cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+                .ConfigureAwait(false)
+                ?? throw new Exception($"平台遊戲商配置不存在.({brandId}|{gameProviderId})");
 
-            if (gameProviderConfigurationId.HasValue)
-            {
-                return _memoryCache
-                    .Set(
-                        key: key,
-                        value: gameProviderConfigurationId,
-                        absoluteExpirationRelativeToNow: _absoluteExpirationRelativeToNow);
-            }
+            return _memoryCache
+            .Set(
+                key: key,
+                value: gameProviderConfigurationId,
+                absoluteExpirationRelativeToNow: _absoluteExpirationRelativeToNow);
         }
         return gameProviderConfigurationId;
     }
 
-    public async ValueTask<int?> GetGameIdAsync(
+    public async ValueTask<int> GetGameIdAsync(
         Guid gameProviderId,
         string gameExternalId,
         CancellationToken cancellationToken = default)
     {
         var key = $"gamerecord:{_gameRecordInfo.GameProviderCode}:{gameProviderId}:{gameExternalId}";
-        if (!_memoryCache.TryGetValue(key, out int? gameId))
+        if (!_memoryCache.TryGetValue(key, out int gameId))
         {
             gameId = await _client
                 .GameGetIdAsync(
                     gameProviderId: gameProviderId,
                     gameExternalId: gameExternalId,
                     cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-
-            if (gameId.HasValue)
-            {
-                return _memoryCache
-                    .Set(
-                        key: key,
-                        value: gameId);
-            }
+                .ConfigureAwait(false)
+                ?? throw new Exception($"遊戲不存在.({gameExternalId})");
+            return _memoryCache
+                .Set(
+                key: key,
+                value: gameId);
         }
         return gameId;
     }
@@ -99,7 +94,7 @@ internal class UtensilRepository : IUtensil
         return gameProviderId;
     }
 
-    public async ValueTask<PlayerInfo?> GetPlayerAsync(
+    public async ValueTask<PlayerInfo> GetPlayerAsync(
         string playerCode,
         CancellationToken cancellationToken = default)
     {
@@ -110,17 +105,14 @@ internal class UtensilRepository : IUtensil
                 .PlayerGetAsync(
                     playerCode: playerCode,
                     cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-
-            if (playerModel is not null)
-            {
-                return _memoryCache
-                    .Set(
-                        key: key,
-                        value: playerModel,
-                        absoluteExpirationRelativeToNow: _absoluteExpirationRelativeToNow);
-            }
+                .ConfigureAwait(false)
+                ?? throw new Exception($"玩家不存在.({playerCode})");
+            return _memoryCache
+                .Set(
+                key: key,
+                value: playerModel,
+                absoluteExpirationRelativeToNow: _absoluteExpirationRelativeToNow);
         }
-        return playerModel;
+        return playerModel ?? throw new Exception($"玩家不存在.({playerCode})");
     }
 }

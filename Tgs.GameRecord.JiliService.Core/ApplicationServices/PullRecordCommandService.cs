@@ -5,15 +5,15 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.JiliService.Core.ApplicationServices;
 
-internal class SchedulePullRecordCommandService : ICommandService<SchedulePullRecordCommand>
+internal class PullRecordCommandService : ICommandService<PullRecordCommand>
 {
     private readonly IGameInterfaceJiliClient _client;
     private readonly IGameRecordUtensil _gameRecordUtensil;
-    private readonly ILogger<SchedulePullRecordCommandService> _logger;
+    private readonly ILogger<PullRecordCommandService> _logger;
     private readonly ICommandService<HandleRecordCommand> _service;
 
-    public SchedulePullRecordCommandService(
-        ILogger<SchedulePullRecordCommandService> logger,
+    public PullRecordCommandService(
+        ILogger<PullRecordCommandService> logger,
         IGameInterfaceJiliClient client,
         IGameRecordUtensil gameRecordUtensil,
         ICommandService<HandleRecordCommand> service)
@@ -24,7 +24,7 @@ internal class SchedulePullRecordCommandService : ICommandService<SchedulePullRe
         _service = service ?? throw new ArgumentNullException(nameof(service));
     }
 
-    public async ValueTask ExecuteAsync(SchedulePullRecordCommand command, CancellationToken cancellationToken = default)
+    public async ValueTask ExecuteAsync(PullRecordCommand command, CancellationToken cancellationToken = default)
     {
         var reply = await _client
             .GetGamePullRecordAsync(

@@ -7,17 +7,17 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.JiliService.Core.UnitTest.ApplicationServices;
 
-public class ManualPullRecordCommandServiceUnitTest
+public class PullRecordCommandServiceUnitTest
 {
     [Fact]
     public async Task Normal_Process()
     {
-        var fakeLogger = NullLogger<ManualPullRecordCommandService>.Instance;
+        var fakeLogger = NullLogger<PullRecordCommandService>.Instance;
         var fakeClient = Substitute.For<IGameInterfaceJiliClient>();
         var fakeGameRecordUtensil = Substitute.For<IGameRecordUtensil>();
         var fakeService = Substitute.For<ICommandService<HandleRecordCommand>>();
 
-        var command = new ManualPullRecordCommand(
+        var command = new PullRecordCommand(
             ApiUrl: new("http://localhost/"),
             AgentId: "agentId",
             AgentKey: "agentKey",
@@ -34,7 +34,7 @@ public class ManualPullRecordCommandServiceUnitTest
                 cancellationToken: Arg.Any<CancellationToken>())
             .Returns(ValueTask.FromResult(new GamePullRecordReply { }));
 
-        var service = new ManualPullRecordCommandService(
+        var service = new PullRecordCommandService(
             fakeLogger,
             fakeClient,
             fakeGameRecordUtensil,

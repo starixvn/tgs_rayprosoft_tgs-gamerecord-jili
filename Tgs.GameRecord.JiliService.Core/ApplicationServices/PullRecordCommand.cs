@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameRecord.JiliService.Core.ApplicationServices;
 
-public record ManualPullRecordCommand(
+public record PullRecordCommand(
     Uri ApiUrl,
     string AgentId,
     string AgentKey,
