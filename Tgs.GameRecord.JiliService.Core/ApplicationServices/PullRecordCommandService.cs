@@ -8,19 +8,16 @@ namespace Tgs.GameRecord.JiliService.Core.ApplicationServices;
 internal class PullRecordCommandService : ICommandService<PullRecordCommand>
 {
     private readonly IGameInterfaceJiliClient _client;
-    private readonly IGameRecordUtensil _gameRecordUtensil;
     private readonly ILogger<PullRecordCommandService> _logger;
     private readonly ICommandService<HandleRecordCommand> _service;
 
     public PullRecordCommandService(
         ILogger<PullRecordCommandService> logger,
         IGameInterfaceJiliClient client,
-        IGameRecordUtensil gameRecordUtensil,
         ICommandService<HandleRecordCommand> service)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _client = client ?? throw new ArgumentNullException(nameof(client));
-        _gameRecordUtensil = gameRecordUtensil ?? throw new ArgumentNullException(nameof(gameRecordUtensil));
         _service = service ?? throw new ArgumentNullException(nameof(service));
     }
 
@@ -28,12 +25,12 @@ internal class PullRecordCommandService : ICommandService<PullRecordCommand>
     {
         var reply = await _client
             .GetGamePullRecordAsync(
-                apiUrl: command.ApiUrl,
-                agentId: command.AgentId,
-                agentKey: command.AgentKey,
-                startTime: command.StartTime,
-                endTime: command.EndTime,
-                cancellationToken: cancellationToken)
+            apiUrl: command.ApiUrl,
+            agentId: command.AgentId,
+            agentKey: command.AgentKey,
+            startTime: command.StartTime,
+            endTime: command.EndTime,
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         var gameRecords = reply.Items ?? Enumerable.Empty<GamePullRecord>();
@@ -51,23 +48,15 @@ internal class PullRecordCommandService : ICommandService<PullRecordCommand>
 
             try
             {
-                var record = await _gameRecordUtensil
-                    .SettlementConvertRecordAsync(
-                        gameRecord,
-                        cancellationToken)
-                    .ConfigureAwait(false);
-
-                _logger.LogDebug("LogOn:{logOn} Message: Settlement. Record:{record}", DateTime.Now.ToString("o"), record);
-
                 await _service
                     .ExecuteAsync(
-                        command: new(record),
-                        cancellationToken: cancellationToken)
+                    command: new(gameRecord),
+                    cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "LogOn:{logOn} Message: Settlement Exception. GameRecord:{gameRecord}", DateTime.Now.ToString("o"), gameRecord);
+                _logger.LogError(ex, "LogOn:{logOn} Message: An exception occurred in this game record.({gameRecord})", DateTime.Now.ToString("o"), gameRecord);
             }
         }
     }
