@@ -168,6 +168,8 @@ _ = app.MapControllers();
 
 app.MapHealthChecks("/healthz");
 
+_ = app.UseHangfireRegisterAsync();
+
 _ = app.UseRegister();
 
 app.Run();
