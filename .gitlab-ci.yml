@@ -1,8 +1,8 @@
 variables:
-  ImageName: pgtgs/game-gamerecord-jili-service
-  SettingKey: game-gamerecord-jili-service
-  HelmTemplateFolderName: game-gamerecord-jili-service
-  BuildCacheKey: Tgs.GameRecord.JiliService.$CI_PIPELINE_ID
+  ImageName: pgtgs/game-gamerecord-jili
+  SettingKey: game-gamerecord-jili
+  HelmTemplateFolderName: game-gamerecord-jili
+  BuildCacheKey: Tgs.GameRecord.Jili.$CI_PIPELINE_ID
 
 default:
   before_script:
@@ -59,7 +59,7 @@ push-docker-image:
     untracked: true   
     policy: pull
   script:
-    - dotnet build "Tgs.GameRecord.JiliService/Tgs.GameRecord.JiliService.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:$Tag" --no-restore
+    - dotnet build "Tgs.GameRecord.Jili/Tgs.GameRecord.Jili.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:$Tag" --no-restore
     - docker push $ImageName:$Tag
 
 push-k8s-template:
