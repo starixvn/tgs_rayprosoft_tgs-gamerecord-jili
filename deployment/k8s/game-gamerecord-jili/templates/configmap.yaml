@@ -15,6 +15,15 @@ data:
         "GameCommandClientBaseUrl": "http://game-gamecommand/",
         "GameRoundsScheduleClientBaseUrl": "http://game-gamerounds-schedule:9090/",
         "GameInterfaceClientBaseUrl": "dns:///game-gameinterface-jili:9090/"
+      },
+      "GameRecordInfo": {
+        "GameProviderCode": "JILITF",
+        "GameProviderConfiguration": "JILITFConfiguration",
+        "GameProviderHangfire": "jilitf-schedule:hangfire:",
+        "IntervalMinutes": 7,
+        "IntervalMinutesMax": 10,
+        "IntervalMinutesMinimum": 1,
+        "PageLimit": 10000
       }
     }
   otel-collector-config.yaml: |

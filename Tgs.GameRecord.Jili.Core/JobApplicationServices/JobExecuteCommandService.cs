@@ -32,6 +32,7 @@ internal class JobExecuteCommandService : ICommandService<JobExecuteCommand>
     public ValueTask ExecuteAsync(JobExecuteCommand command, CancellationToken cancellationToken = default)
     {
         var endTime = DateTimeOffset.ParseExact(DateTimeOffset.UtcNow.ToString(@"yyyy-MM-dd\THH:mm:00K"), @"yyyy-MM-dd\THH:mm:ssK", null, styles: System.Globalization.DateTimeStyles.RoundtripKind);
+        endTime = endTime.AddMinutes(-3);
         var startTime = endTime.AddMinutes(_intervalMinutes * -1);
 
         var parameters = new
