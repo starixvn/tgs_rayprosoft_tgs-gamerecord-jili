@@ -52,19 +52,20 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Learn more about configuring Hangfire
-builder.Services.AddHangfire((sp, config) =>
-{
-    var systemConfig = sp.GetRequiredService<IConfiguration>();
-    var connectionString = builder.Configuration.GetConnectionString("redis")!;
-    var gameRecordInfoOptions = builder.Configuration.GetSection("GameRecordInfo").Get<GameRecordInfoOptions>()!;
-    var options = new RedisStorageOptions
+builder.Services.AddHangfire(
+    (sp, config) =>
     {
-        Prefix = gameRecordInfoOptions.HangfirePrefix
-    };
-    _ = config
-    .UseRedisStorage(connectionString, options)
-    .UseConsole();
-})
+        var systemConfig = sp.GetRequiredService<IConfiguration>();
+        var connectionString = builder.Configuration.GetConnectionString("redis")!;
+        var gameRecordInfoOptions = builder.Configuration.GetSection("GameRecordInfo").Get<GameRecordInfoOptions>()!;
+        var options = new RedisStorageOptions
+        {
+            Prefix = gameRecordInfoOptions.HangfirePrefix
+        };
+        _ = config
+        .UseRedisStorage(connectionString, options)
+        .WithJobExpirationTimeout(TimeSpan.FromHours(1));
+    })
     .AddHangfireServer();
 
 builder.Services.AddGameRecord(
@@ -147,8 +148,7 @@ app.UseHangfireDashboard(
     "/hangfire",
     new DashboardOptions()
     {
-        Authorization =
-        new[]
+        Authorization = new[]
         {
             new IgnoreHangfireAuthorizationFilter()
         }
