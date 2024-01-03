@@ -31,7 +31,6 @@ builder.Logging
     });
 
 // Add services to the container.
-
 builder.Services
     .AddRouting(options => options.LowercaseUrls = true)
     .AddControllers(options =>
@@ -43,6 +42,7 @@ builder.Services
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -64,7 +64,7 @@ builder.Services.AddHangfire(
         };
         _ = config
         .UseRedisStorage(connectionString, options)
-        .WithJobExpirationTimeout(TimeSpan.FromHours(1));
+        .WithJobExpirationTimeout(TimeSpan.FromMinutes(30));
     })
     .AddHangfireServer();
 
