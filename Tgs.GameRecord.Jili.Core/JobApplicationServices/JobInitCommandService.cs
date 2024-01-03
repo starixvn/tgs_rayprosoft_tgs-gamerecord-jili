@@ -119,7 +119,7 @@ internal class JobInitCommandService(
                     options: _recurringJobOptions);
 
                 RecurringJob.AddOrUpdate<IHangfireUtensil>(
-                    recurringJobId: recurringJobId,
+                    recurringJobId:string.Concat( recurringJobId, "|check"),
                     methodCall: service => service.JobCheckExecuteAsync(jobCheckExecuteCommand),
                     cronExpression: Cron.Minutely(),
                     options: _recurringJobOptions);
