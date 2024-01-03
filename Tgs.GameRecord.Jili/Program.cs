@@ -1,7 +1,6 @@
 ﻿using System.Net.Mime;
 using System.Text.Json.Serialization;
 using Hangfire;
-using Hangfire.Console;
 using Hangfire.Redis.StackExchange;
 using Microsoft.AspNetCore.Mvc;
 using OpenTelemetry.Metrics;
