@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Hangfire;
 using Hangfire.Redis.StackExchange;
 using Microsoft.AspNetCore.Mvc;
+using NATS.Client.Core;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -90,20 +91,18 @@ builder.Services.AddGameRecord(
     });
 
 builder.Services
-    .AddMessageQueue()
-    .AddNatsMessageQueue(natsConfig =>
+    .AddKeyedSingleton("Nats", (sp, _) => new NatsConnection(NatsOpts.Default with
     {
-        _ = natsConfig
-        .ConfigQueueOptions((options, sp) =>
-        {
-            var configuration = sp.GetRequiredService<IConfiguration>();
-            options.Url = configuration.GetConnectionString("Nats")!;
-        })
-        .AddHandler<GameRecordMessageHandler>(JiliNatsConst.SchedulePublish, JiliNatsConst.SchedulePublish)
-        .AddHandler<GameRecordMessageHandler>(JiliNatsConst.ManualPublish, JiliNatsConst.ManualPublish);
-    })
-    .ClearAllExchanges()
+        Url = builder.Configuration.GetConnectionString("Nats")!
+    }))
+    .AddMessageQueue()
+    .AddNatsMessageQueue(config => config
+    .ConfigureResolveConnection(sp => sp.GetRequiredKeyedService<NatsConnection>("Nats"))
+    .AddHandler<GameRecordMessageHandler>(JiliNatsConst.SchedulePublish, JiliNatsConst.SchedulePublish)
+    .AddHandler<GameRecordMessageHandler>(JiliNatsConst.ManualPublish, JiliNatsConst.ManualPublish))
     .AddNatsGlobPatternExchange("*");
+
+
 
 builder.Services
     .AddOpenTelemetry()

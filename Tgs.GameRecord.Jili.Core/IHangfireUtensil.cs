@@ -6,9 +6,11 @@ public interface IHangfireUtensil
 {
     public Task JobCheckAsync();
 
-    public Task JobCheckExecuteAsync(JobCheckExecuteCommand source);
+    public Task JobExecute30MinsAsync(JobExecute30MinsCommand source);
 
     public Task JobExecuteAsync(JobExecuteCommand source);
+
+    public Task JobExecuteHourlyAsync(JobExecuteHourlyCommand source);
 
     public Task JobInitAsync();
 }

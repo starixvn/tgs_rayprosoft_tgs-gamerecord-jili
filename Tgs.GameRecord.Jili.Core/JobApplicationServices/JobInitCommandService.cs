@@ -101,7 +101,14 @@ internal class JobInitCommandService(
                     AgentId: agentId,
                     AgentKey: agentKey);
 
-                var jobCheckExecuteCommand = new JobCheckExecuteCommand(
+                var jobExecute30MinsCommand = new JobExecute30MinsCommand(
+                    GameProviderCode: _gameRecordInfo.GameProviderCode,
+                    Name: gameProviderConfig.Name,
+                    ApiUrl: apiUrl,
+                    AgentId: agentId,
+                    AgentKey: agentKey);
+
+                var jobExecuteHourlyCommand = new JobExecuteHourlyCommand(
                     GameProviderCode: _gameRecordInfo.GameProviderCode,
                     Name: gameProviderConfig.Name,
                     ApiUrl: apiUrl,
@@ -119,8 +126,14 @@ internal class JobInitCommandService(
                     options: _recurringJobOptions);
 
                 RecurringJob.AddOrUpdate<IHangfireUtensil>(
-                    recurringJobId:string.Concat( recurringJobId, "|check"),
-                    methodCall: service => service.JobCheckExecuteAsync(jobCheckExecuteCommand),
+                    recurringJobId: string.Concat(recurringJobId, "|30Mins"),
+                    methodCall: service => service.JobExecute30MinsAsync(jobExecute30MinsCommand),
+                    cronExpression: Cron.Minutely(),
+                    options: _recurringJobOptions);
+
+                RecurringJob.AddOrUpdate<IHangfireUtensil>(
+                    recurringJobId: string.Concat(recurringJobId, "|Hourly"),
+                    methodCall: service => service.JobExecuteHourlyAsync(jobExecuteHourlyCommand),
                     cronExpression: Cron.Minutely(),
                     options: _recurringJobOptions);
 

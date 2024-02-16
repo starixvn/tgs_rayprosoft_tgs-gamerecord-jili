@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tgs.GameRecord.Jili.Core.JobApplicationServices;
 
-public record JobCheckExecuteCommand(
+public record JobExecute30MinsCommand(
     string GameProviderCode,
     string Name,
     Uri ApiUrl,

@@ -9,9 +9,10 @@ namespace Tgs.GameRecord.Jili.Messages;
 
 public class GameRecordMessageHandler(
     ILogger<GameRecordMessageHandler> logger,
-    ICommandService<PullRecordCommand> service) : IMessageHandler
+    ICommandService<PullRecordCommand> service) : IMessageHandler<ReadOnlyMemory<byte>>
 {
-    public ValueTask HandleAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
+
+    public ValueTask HandleAsync(string subject, ReadOnlyMemory<byte> data, IEnumerable<MessageHeaderValue>? headerValues, CancellationToken cancellationToken = default)
     {
         var json = Encoding.UTF8.GetString(data.Span);
         var message = JsonSerializer.Deserialize<JiliGameRecordMessage>(json)

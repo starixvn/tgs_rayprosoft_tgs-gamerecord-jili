@@ -8,14 +8,14 @@ using Valhalla.MessageQueue;
 
 namespace Tgs.GameRecord.Jili.Core.JobApplicationServices;
 
-internal class JobCheckExecuteCommandService : ICommandService<JobCheckExecuteCommand>
+internal class JobExecute30MinsCommandService : ICommandService<JobExecute30MinsCommand>
 {
     private readonly GameRecordInfoOptions _gameRecordInfo;
     private readonly double _intervalMinutes;
     private readonly ILogger<JobExecuteCommandService> _logger;
     private readonly IMessageSender _messageSender;
 
-    public JobCheckExecuteCommandService(
+    public JobExecute30MinsCommandService(
         ILogger<JobExecuteCommandService> logger,
         IOptions<GameRecordInfoOptions> options,
         IMessageSender messageSender)
@@ -30,10 +30,10 @@ internal class JobCheckExecuteCommandService : ICommandService<JobCheckExecuteCo
             : _gameRecordInfo.IntervalMinutes;
     }
 
-    public ValueTask ExecuteAsync(JobCheckExecuteCommand command, CancellationToken cancellationToken = default)
+    public ValueTask ExecuteAsync(JobExecute30MinsCommand command, CancellationToken cancellationToken = default)
     {
-        var endTime = DateTimeOffset.Parse(DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:00.000z"));
-        endTime = endTime.AddMinutes(-10);
+        var currentTime = DateTimeOffset.UtcNow;
+        var endTime = new DateTimeOffset(currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour, currentTime.Minute, 00, currentTime.Offset).AddMinutes(-30);
         var startTime = endTime.AddMinutes(_intervalMinutes * -1);
 
         var parameters = new JiliGameRecordMessage
@@ -47,8 +47,7 @@ internal class JobCheckExecuteCommandService : ICommandService<JobCheckExecuteCo
 
         _logger.LogInformation("LogOn:{logOn} Parameters:{parameters}", DateTime.Now.ToString("u"), parameters);
 
-        return _messageSender
-            .PublishAsync(
+        return _messageSender.PublishAsync<ReadOnlyMemory<byte>>(
             subject: JiliNatsConst.SchedulePublish,
             data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(parameters)),
             cancellationToken: cancellationToken);
