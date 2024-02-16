@@ -33,7 +33,7 @@ internal class JobExecuteCommandService : ICommandService<JobExecuteCommand>
     public ValueTask ExecuteAsync(JobExecuteCommand command, CancellationToken cancellationToken = default)
     {
         var currentTime = DateTimeOffset.UtcNow;
-        var endTime = new DateTimeOffset(currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour, currentTime.Minute, 00, currentTime.Offset);
+        var endTime = new DateTimeOffset(currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour, currentTime.Minute, 00, currentTime.Offset).AddMinutes(-1);
         var startTime = endTime.AddMinutes(_intervalMinutes * -1);
 
         var parameters = new JiliGameRecordMessage
