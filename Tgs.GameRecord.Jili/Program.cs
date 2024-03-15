@@ -98,8 +98,10 @@ builder.Services
     .AddMessageQueue()
     .AddNatsMessageQueue(config => config
     .ConfigureResolveConnection(sp => sp.GetRequiredKeyedService<NatsConnection>("Nats"))
-    .AddHandler<GameRecordMessageHandler>(JiliNatsConst.SchedulePublish, JiliNatsConst.SchedulePublish)
-    .AddHandler<GameRecordMessageHandler>(JiliNatsConst.ManualPublish, JiliNatsConst.ManualPublish))
+    .AddHandler<ScheduleMessageHandler>(JiliNatsConst.SchedulePublish, JiliNatsConst.SchedulePublish)
+    .AddHandler<ScheduleMinsMessageHandler>(JiliNatsConst.ScheduleMinsPublish, JiliNatsConst.ScheduleMinsPublish)
+    .AddHandler<ScheduleHourlyMessageHandler>(JiliNatsConst.ScheduleHourlyPublish, JiliNatsConst.ScheduleHourlyPublish)
+    .AddHandler<ManualMessageHandler>(JiliNatsConst.ManualPublish, JiliNatsConst.ManualPublish))
     .AddNatsGlobPatternExchange("*");
 
 

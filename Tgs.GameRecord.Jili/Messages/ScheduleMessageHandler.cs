@@ -7,8 +7,8 @@ using Valhalla.MessageQueue;
 
 namespace Tgs.GameRecord.Jili.Messages;
 
-public class GameRecordMessageHandler(
-    ILogger<GameRecordMessageHandler> logger,
+public class ScheduleMessageHandler(
+    ILogger<ScheduleMessageHandler> logger,
     ICommandService<PullRecordCommand> service) : IMessageHandler<ReadOnlyMemory<byte>>
 {
 

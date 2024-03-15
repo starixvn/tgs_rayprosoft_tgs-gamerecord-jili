@@ -48,7 +48,7 @@ internal class JobExecute30MinsCommandService : ICommandService<JobExecute30Mins
         _logger.LogInformation("LogOn:{logOn} Parameters:{parameters}", DateTime.Now.ToString("u"), parameters);
 
         return _messageSender.PublishAsync<ReadOnlyMemory<byte>>(
-            subject: JiliNatsConst.SchedulePublish,
+            subject: JiliNatsConst.ScheduleMinsPublish,
             data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(parameters)),
             cancellationToken: cancellationToken);
     }
