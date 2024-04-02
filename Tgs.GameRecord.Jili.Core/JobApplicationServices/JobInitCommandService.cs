@@ -130,13 +130,13 @@ internal class JobInitCommandService(
                     methodCall: service => service.JobExecute30MinsAsync(jobExecute30MinsCommand),
                     cronExpression: Cron.Minutely(),
                     options: _recurringJobOptions);
-                /*
+
                 RecurringJob.AddOrUpdate<IHangfireUtensil>(
                     recurringJobId: string.Concat(recurringJobId, "|Hourly"),
                     methodCall: service => service.JobExecuteHourlyAsync(jobExecuteHourlyCommand),
                     cronExpression: Cron.Minutely(),
                     options: _recurringJobOptions);
-                */
+                
 
                 //初始化強制第一次處理
                 _ = BackgroundJob.Enqueue<IHangfireUtensil>(service => service.JobExecuteAsync(jobExecuteCommand));
