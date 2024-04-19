@@ -10,46 +10,46 @@ namespace Tgs.GameRecord.Jili.Core.UnitTest.ApplicationServices;
 
 public class PullRecordCommandServiceUnitTest
 {
-    [Fact]
-    public async Task Normal_Process()
-    {
-        var fakeLogger = NullLogger<PullRecordCommandService>.Instance;
-        var options = Options.Create(new GameRecordInfoOptions
-        {
-            GameProviderCode = "JILITF",
-            GameProviderConfiguration = "JILITFConfiguration",
-            HangfirePrefix = "gamerecord-jili-hangfire:",
-            HangfireLocking = "gamerecord-jili-locking:",
-            IntervalMinutes = 5,
-            IntervalMinutesMax = 10,
-            IntervalMinutesMinimum = 1,
-            PageLimit = 10000
-        });
-        var fakeClient = Substitute.For<IGameInterfaceJiliClient>();
-        var fakeService = Substitute.For<ICommandService<HandleRecordCommand>>();
+	[Fact]
+	public async Task Normal_Process()
+	{
+		var fakeLogger = NullLogger<PullRecordCommandService>.Instance;
+		var options = Options.Create(new GameRecordInfoOptions
+		{
+			GameProviderCode = "JILITF",
+			GameProviderConfiguration = "JILITFConfiguration",
+			HangfirePrefix = "gamerecord-jili-hangfire:",
+			HangfireLocking = "gamerecord-jili-locking:",
+			IntervalMinutes = 5,
+			IntervalMinutesMax = 10,
+			IntervalMinutesMinimum = 1,
+			PageLimit = 10000
+		});
+		var fakeClient = Substitute.For<IGameInterfaceJiliClient>();
+		var fakeService = Substitute.For<ICommandService<HandleRecordCommand>>();
 
-        var command = new PullRecordCommand(
-            ApiUrl: new("http://localhost/"),
-            AgentId: "agentId",
-            AgentKey: "agentKey",
-            StartTime: DateTimeOffset.UtcNow.AddMinutes(-10),
-            EndTime: DateTimeOffset.UtcNow);
+		var command = new PullRecordCommand(
+			ApiUrl: new("http://localhost/"),
+			AgentId: "agentId",
+			AgentKey: "agentKey",
+			StartTime: DateTimeOffset.UtcNow.AddMinutes(-10),
+			EndTime: DateTimeOffset.UtcNow);
 
-        _ = fakeClient.GetGamePullRecordAsync(
-            apiUrl: Arg.Is(command.ApiUrl),
-            agentId: Arg.Is(command.AgentId),
-            agentKey: Arg.Is(command.AgentKey),
-            startTime: Arg.Is(command.StartTime),
-            endTime: Arg.Is(command.EndTime),
-            cancellationToken: Arg.Any<CancellationToken>())
-            .Returns(ValueTask.FromResult(new GamePullRecordReply { }));
+		_ = fakeClient.GetGamePullRecordAsync(
+			apiUrl: Arg.Is(command.ApiUrl),
+			agentId: Arg.Is(command.AgentId),
+			agentKey: Arg.Is(command.AgentKey),
+			startTime: Arg.Is(command.StartTime),
+			endTime: Arg.Is(command.EndTime),
+			cancellationToken: Arg.Any<CancellationToken>())
+			.Returns(ValueTask.FromResult(new GamePullRecordReply { }));
 
-        var service = new PullRecordCommandService(
-            fakeLogger,
-            options,
-            fakeClient,
-            fakeService);
+		var service = new PullRecordCommandService(
+			fakeLogger,
+			options,
+			fakeClient,
+			fakeService);
 
-        await service.ExecuteAsync(command: command);
-    }
+		await service.ExecuteAsync(command: command);
+	}
 }
