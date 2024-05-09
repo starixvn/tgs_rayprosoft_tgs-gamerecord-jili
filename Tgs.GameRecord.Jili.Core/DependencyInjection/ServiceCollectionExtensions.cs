@@ -20,7 +20,6 @@ public static class ServiceCollectionExtensions
 		.AddSingleton(TimeProvider.System)
 		.AddGameCommandClient(gameCommandClientOptions)
 		.AddGameInterfaceJiliServiceClient(gameInterfaceJiliClientOptions)
-		.AddGameRecordHandleClient()
 		.AddTransient<IHangfireUtensil, HangfireUtensil>()
 		.AddTransient<IHangfireLock>(sp => ActivatorUtilities.CreateInstance<HangfireLock>(sp, redisDatabaseResolver(sp)));
 }

@@ -10,7 +10,8 @@ data:
         "LogLevel": {
           "Default": "Warning",
           "Tgs.GameRecord.Jili.Messages": "Information",
-          "Tgs.GameRecord.Jili.Core.JobApplicationServices": "Information"
+          "Tgs.GameRecord.Jili.Core.JobApplicationServices": "Information",
+           "Tgs.GameRecord.Jili.Core.ApplicationServices.HandleRecordCommandService": "Information"
         }
       },
       "GameRecord": {

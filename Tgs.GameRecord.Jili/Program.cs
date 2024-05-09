@@ -11,6 +11,7 @@ using Tgs.GameRecord.Jili;
 using Tgs.GameRecord.Jili.Common;
 using Tgs.GameRecord.Jili.Core;
 using Tgs.GameRecord.Jili.Messages;
+using Tgs.MessageQueue.Nats.Serializers;
 
 var filterInstrumentations = new[] { "html", "ico", "png", "jpg" };
 
@@ -90,7 +91,8 @@ builder.Services.AddGameRecord(
 builder.Services
 	.AddKeyedSingleton("Nats", (sp, _) => new NatsConnection(NatsOpts.Default with
 	{
-		Url = builder.Configuration.GetConnectionString("Nats")!
+		Url = builder.Configuration.GetConnectionString("Nats")!,
+		SerializerRegistry = TgsNatsSerializerRegistration.Default
 	}))
 	.AddMessageQueue()
 	.AddNatsMessageQueue(config => config
@@ -99,6 +101,7 @@ builder.Services
 	.AddHandler<ScheduleMinsMessageHandler>(JiliNatsConst.ScheduleMinsPublish, JiliNatsConst.ScheduleMinsPublish)
 	.AddHandler<ScheduleHourlyMessageHandler>(JiliNatsConst.ScheduleHourlyPublish, JiliNatsConst.ScheduleHourlyPublish)
 	.AddHandler<ManualMessageHandler>(JiliNatsConst.ManualPublish, JiliNatsConst.ManualPublish))
+	.ClearAllExchanges()
 	.AddNatsGlobPatternExchange("*");
 
 builder.Services
