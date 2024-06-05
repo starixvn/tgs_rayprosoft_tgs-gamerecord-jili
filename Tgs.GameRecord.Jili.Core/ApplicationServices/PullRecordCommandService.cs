@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tgs.GameInterface.Jili.Client;
-using Tgs.GameInterface.JiliService.Protos;
+using Tgs.GameInterface.Jili.Protos;
 using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.Jili.Core.ApplicationServices;
@@ -16,21 +16,23 @@ internal class PullRecordCommandService(
 	{
 		var page = 1;
 		var pageLimit = options.Value.PageLimit;
-		IEnumerable<GamePullRecord>? gameRecords;
+
+		IEnumerable<GameRecordInfo> gameRecords;
 		do
 		{
-			var reply = await client.GetGamePullRecordAsync(
-				apiUrl: command.ApiUrl,
-				agentId: command.AgentId,
-				agentKey: command.AgentKey,
-				startTime: command.StartTime,
-				endTime: command.EndTime,
-				page: page,
-				pageLimit: pageLimit,
-				cancellationToken: cancellationToken)
-				.ConfigureAwait(false);
-
-			gameRecords = reply.Items ?? Enumerable.Empty<GamePullRecord>();
+			gameRecords = await client.GameRecordAsync(
+			   apiUrl: command.ApiUrl,
+			   agentId: command.AgentId,
+			   agentKey: command.AgentKey,
+			   startTime: command.StartTime,
+			   endTime: command.EndTime,
+			   page: page,
+			   pageLimit: pageLimit,
+			   cancellationToken: cancellationToken)
+			   .ToArrayAsync(
+			   cancellationToken: cancellationToken)
+			   .ConfigureAwait(false)
+			   ?? Enumerable.Empty<GameRecordInfo>();
 
 			logger.LogDebug("LogOn:{logOn} Message: Settlement. GameRecords:{gameRecords}", DateTime.Now.ToString("o"), gameRecords);
 

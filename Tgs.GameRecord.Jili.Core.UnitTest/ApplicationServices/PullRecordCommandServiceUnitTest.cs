@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using NSubstitute;
 using Tgs.GameInterface.Jili.Client;
-using Tgs.GameInterface.JiliService.Protos;
 using Tgs.GameRecord.Jili.Core.ApplicationServices;
 using Tgs.ServiceUtility;
 
@@ -35,14 +34,14 @@ public class PullRecordCommandServiceUnitTest
 			StartTime: DateTimeOffset.UtcNow.AddMinutes(-10),
 			EndTime: DateTimeOffset.UtcNow);
 
-		_ = fakeClient.GetGamePullRecordAsync(
+		_ = fakeClient.GameRecordAsync(
 			apiUrl: Arg.Is(command.ApiUrl),
 			agentId: Arg.Is(command.AgentId),
 			agentKey: Arg.Is(command.AgentKey),
 			startTime: Arg.Is(command.StartTime),
 			endTime: Arg.Is(command.EndTime),
 			cancellationToken: Arg.Any<CancellationToken>())
-			.Returns(ValueTask.FromResult(new GamePullRecordReply { }));
+			.Returns(Array.Empty<GameInterface.Jili.Protos.GameRecordInfo>().ToAsyncEnumerable());
 
 		var service = new PullRecordCommandService(
 			fakeLogger,

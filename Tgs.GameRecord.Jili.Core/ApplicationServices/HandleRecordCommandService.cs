@@ -1,8 +1,6 @@
-﻿using System.Text.Json.Nodes;
-using Google.Protobuf.WellKnownTypes;
+﻿using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Tgs.GameInterface.JiliService.Protos;
 using Tgs.ServiceUtility;
 using Valhalla.MessageQueue;
 
@@ -17,7 +15,7 @@ internal class HandleRecordCommandService(
 
 	public async ValueTask ExecuteAsync(HandleRecordCommand command, CancellationToken cancellationToken = default)
 	{
-		var betState = command.Record.Status == GamePullRecordStatus.JiliStatusWin ? Handle.Common.Protos.BetState.Win : Handle.Common.Protos.BetState.Loss;
+		var betState = command.Record.Status == GameInterface.Jili.Protos.GameRecordStatus.Win ? Handle.Common.Protos.BetState.Win : Handle.Common.Protos.BetState.Loss;
 		var externalCreatedOn = command.Record.WagersTime.ToDateTimeOffset();
 		var externalClosedOn = command.Record.PayoffTime.ToDateTimeOffset();
 		var bet = command.Record.BetAmount.ToDecimal().GetValueOrDefault(0);
