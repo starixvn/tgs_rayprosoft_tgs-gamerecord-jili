@@ -1,5 +1,5 @@
-﻿using Tgs.GameInterface.JiliService.Protos;
+﻿using Tgs.GameInterface.Jili.Protos;
 
 namespace Tgs.GameRecord.Jili.Core.ApplicationServices;
 
-public record HandleRecordCommand(GamePullRecord Record);
+public record HandleRecordCommand(GameRecordInfo Record);

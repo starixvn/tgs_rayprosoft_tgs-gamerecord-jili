@@ -1,9 +1,8 @@
-﻿using System.Text.Json.Nodes;
-using Google.Protobuf.WellKnownTypes;
+﻿using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using NSubstitute;
-using Tgs.GameInterface.JiliService.Protos;
+using Tgs.GameInterface.Jili.Protos;
 using Tgs.GameRecord.Jili.Core.ApplicationServices;
 using Valhalla.MessageQueue;
 
@@ -28,7 +27,7 @@ public class HandleRecordCommandServiceUnitTest
 		var fakeMessageSender = Substitute.For<IMessageSender>();
 
 		var command = new HandleRecordCommand(
-			Record: new GamePullRecord
+			Record: new GameRecordInfo
 			{
 				Account = "4uk946xvbpcd",
 				WagersId = "1692153486628666049",
@@ -37,7 +36,7 @@ public class HandleRecordCommandServiceUnitTest
 				BetAmount = 1m,
 				PayoffTime = DateTimeOffset.Parse("2023-08-15T22:48:59-04:00").ToTimestamp(),
 				PayoffAmount = 0.8m,
-				Status = (GamePullRecordStatus)2,
+				Status = (GameRecordStatus)2,
 				SettlementTime = DateTimeOffset.Parse("2023-08-15T22:48:59-04:00").ToTimestamp(),
 				GameCategoryId = 1,
 				Type = 1,
@@ -104,7 +103,7 @@ public class HandleRecordCommandServiceUnitTest
 		var fakeMessageSender = Substitute.For<IMessageSender>();
 
 		var command = new HandleRecordCommand(
-			Record: new GamePullRecord
+			Record: new GameRecordInfo
 			{
 				Account = "4ukpmyqhh2d7",
 				WagersId = "1692154079166114134",
@@ -113,7 +112,7 @@ public class HandleRecordCommandServiceUnitTest
 				BetAmount = 5m,
 				PayoffTime = DateTimeOffset.Parse("2023-08-15T22:48:59-04:00").ToTimestamp(),
 				PayoffAmount = 27.7m,
-				Status = (GamePullRecordStatus)1,
+				Status = (GameRecordStatus)1,
 				SettlementTime = DateTimeOffset.Parse("2023-08-15T22:48:59-04:00").ToTimestamp(),
 				GameCategoryId = 1,
 				Type = 1,

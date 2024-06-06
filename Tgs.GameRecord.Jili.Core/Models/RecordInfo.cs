@@ -1,4 +1,4 @@
-﻿using Tgs.GameInterface.JiliService.Protos;
+﻿using Tgs.GameInterface.Jili.Protos;
 
 namespace Tgs.GameRecord.Jili.Core.Models;
 
@@ -13,7 +13,7 @@ public record RecordInfo(
 	string CurrencyCode,
 	Guid BrandId,
 	Guid GameProviderConfigurationId,
-	GamePullRecordStatus Status,
+	GameRecordStatus Status,
 	DateTimeOffset ExternalCreatedOn,
 	DateTimeOffset? ExternalClosedOn,
 	decimal Bet,
