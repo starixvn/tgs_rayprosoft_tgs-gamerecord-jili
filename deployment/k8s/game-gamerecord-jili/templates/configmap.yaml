@@ -9,9 +9,15 @@ data:
       "Logging": {
         "LogLevel": {
           "Default": "Warning",
-          "Tgs.GameRecord.Jili.Messages": "Information",
-          "Tgs.GameRecord.Jili.Core.JobApplicationServices": "Information",
-           "Tgs.GameRecord.Jili.Core.ApplicationServices.HandleRecordCommandService": "Information"
+          "Grpc.Net.Client.Balancer": "Debug",
+          "Tgs.GameRecord.Jili.Messages.ManualMessageHandler": "Information",
+          "Tgs.GameRecord.Jili.Messages.ScheduleMessageHandler": "Warning",
+          "Tgs.GameRecord.Jili.Messages.ScheduleMinsMessageHandler": "Warning",
+          "Tgs.GameRecord.Jili.Messages.ScheduleHourlyMessageHandler": "Warning",
+          "Tgs.GameRecord.Jili.Core.JobApplicationServices.JobExecuteCommandService": "Warning",
+          "Tgs.GameRecord.Jili.Core.JobApplicationServices.JobExecute30MinsCommandService": "Warning",
+          "Tgs.GameRecord.Jili.Core.JobApplicationServices.JobExecuteHourlyCommandService": "Warning",
+          "Tgs.GameRecord.Jili.Core.ApplicationServices.HandleRecordCommandService": "Warning"
         }
       },
       "GameRecord": {
