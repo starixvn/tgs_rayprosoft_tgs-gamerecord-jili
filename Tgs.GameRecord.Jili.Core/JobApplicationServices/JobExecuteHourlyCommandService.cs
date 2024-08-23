@@ -22,7 +22,7 @@ internal class JobExecuteHourlyCommandService(
 	public ValueTask ExecuteAsync(JobExecuteHourlyCommand command, CancellationToken cancellationToken = default)
 	{
 		var currentTime = timeProvider.GetUtcNow();
-		var endTime = new DateTimeOffset(currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour, currentTime.Minute, 00, currentTime.Offset).AddMinutes(-30);
+		var endTime = new DateTimeOffset(currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour, currentTime.Minute, 00, currentTime.Offset).AddMinutes(-60);
 		var startTime = endTime.AddMinutes(_intervalMinutes * -1);
 
 		var message = new JiliGameRecordMessage
