@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 using Microsoft.AspNetCore.Mvc;
 using Tgs.GameRecord.Jili.Common;
@@ -7,34 +6,67 @@ using Valhalla.MessageQueue;
 
 namespace Tgs.GameRecord.Jili.Controllers;
 
+[Route("[controller]")]
 [ApiController]
-[Route("JILI")]
-public class JiliController : ControllerBase
+public class JokerController : ControllerBase
 {
 	/// <summary>
-	/// Manuals the publish asynchronous.
+	/// Games the record manual asynchronous.
 	/// </summary>
 	/// <param name="messageSender">The message sender.</param>
 	/// <param name="source">The source.</param>
 	/// <returns></returns>
-	/// <remarks>
-	/// <b>Example</b><br />
-	///
-	///     Post
-	///         {
-	///             "apiUrl":"https://uat-wb-api.jlfafafa2.com/",
-	///             "gameProviderAgentId":"PG_GPI_CNY",
-	///             "gameProviderAgentKey":"82af5971ae233eaa003b774be4079e7902ea7ff4",
-	///             "startTime": "2022-09-07T18:50:00+08:00",
-	///             "endTime": "2022-09-07T18:55:00+08:00"
-	///         }
-	/// </remarks>
-	[HttpPost]
-	public ValueTask ManualPublishAsync(
+	[HttpPost("manual")]
+	public ValueTask GameRecordManualAsync(
 		[FromServices] IMessageSender messageSender,
 		JiliGameRecordMessage source)
 		=> messageSender.PublishAsync(
 			subject: JiliNatsConst.ManualPublish,
-			data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(source)),
+			data: JsonSerializer.SerializeToUtf8Bytes(source),
+			cancellationToken: HttpContext.RequestAborted);
+
+	/// <summary>
+	/// Games the record schedule asynchronous.
+	/// </summary>
+	/// <param name="messageSender">The message sender.</param>
+	/// <param name="source">The source.</param>
+	/// <returns></returns>
+	[HttpPost("schedule")]
+	public ValueTask GameRecordScheduleAsync(
+		[FromServices] IMessageSender messageSender,
+		JiliGameRecordMessage source)
+		=> messageSender.PublishAsync(
+			subject: JiliNatsConst.SchedulePublish,
+			data: JsonSerializer.SerializeToUtf8Bytes(source),
+			cancellationToken: HttpContext.RequestAborted);
+
+	/// <summary>
+	/// Games the record schedule mins asynchronous.
+	/// </summary>
+	/// <param name="messageSender">The message sender.</param>
+	/// <param name="source">The source.</param>
+	/// <returns></returns>
+	[HttpPost("schedule/mins")]
+	public ValueTask GameRecordScheduleMinsAsync(
+		[FromServices] IMessageSender messageSender,
+		JiliGameRecordMessage source)
+		=> messageSender.PublishAsync(
+			subject: JiliNatsConst.ScheduleMinsPublish,
+			data: JsonSerializer.SerializeToUtf8Bytes(source),
+			cancellationToken: HttpContext.RequestAborted);
+
+	/// <summary>
+	/// Games the record schedule hourly asynchronous.
+	/// </summary>
+	/// <param name="messageSender">The message sender.</param>
+	/// <param name="source">The source.</param>
+	/// <returns></returns>
+	[HttpPost("schedule/hourly")]
+	public ValueTask GameRecordScheduleHourlyAsync(
+		[FromServices] IMessageSender messageSender,
+		JiliGameRecordMessage source)
+		=> messageSender.PublishAsync(
+			subject: JiliNatsConst.ScheduleHourlyPublish,
+			data: JsonSerializer.SerializeToUtf8Bytes(source),
 			cancellationToken: HttpContext.RequestAborted);
 }

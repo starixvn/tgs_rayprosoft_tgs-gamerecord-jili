@@ -13,7 +13,7 @@ namespace Tgs.GameRecord.Jili.Core.JobApplicationServices;
 internal class JobInitCommandService(
 	ILogger<JobInitCommandService> logger,
 	IOptions<GameRecordInfoOptions> options,
-	IHangfireLock hangfireLock,
+	IHangfireLockRepository hangfireLock,
 	IGameCommandClient client) : ICommandService<JobInitCommand>
 {
 	private readonly GameRecordInfoOptions _gameRecordInfo = options.Value;
@@ -119,13 +119,13 @@ internal class JobInitCommandService(
 
 				var recurringJobId = $"{gameProviderConfig.Name}|{agentId}|{gameProviderConfig.GameProviderConfigId}";
 
-				RecurringJob.AddOrUpdate<IHangfireUtensil>(
+				RecurringJob.AddOrUpdate<IHangfireUtensilRepository>(
 					recurringJobId: recurringJobId,
 					methodCall: service => service.JobExecuteAsync(jobExecuteCommand),
 					cronExpression: Cron.Minutely(),
 					options: _recurringJobOptions);
 
-				RecurringJob.AddOrUpdate<IHangfireUtensil>(
+				RecurringJob.AddOrUpdate<IHangfireUtensilRepository>(
 					recurringJobId: string.Concat(recurringJobId, "|30Mins"),
 					methodCall: service => service.JobExecute30MinsAsync(jobExecute30MinsCommand),
 					cronExpression: Cron.Minutely(),
@@ -138,7 +138,7 @@ internal class JobInitCommandService(
 					options: _recurringJobOptions);
 				*/
 				//初始化強制第一次處理
-				_ = BackgroundJob.Enqueue<IHangfireUtensil>(service => service.JobExecuteAsync(jobExecuteCommand));
+				_ = BackgroundJob.Enqueue<IHangfireUtensilRepository>(service => service.JobExecuteAsync(jobExecuteCommand));
 			}
 		}
 		catch (Exception ex)
@@ -147,7 +147,7 @@ internal class JobInitCommandService(
 		}
 		finally
 		{
-			_ = BackgroundJob.Schedule<IHangfireUtensil>(service => service.JobCheckAsync(), TimeSpan.FromMinutes(1));
+			_ = BackgroundJob.Schedule<IHangfireUtensilRepository>(service => service.JobCheckAsync(), TimeSpan.FromMinutes(1));
 		}
 	}
 }
