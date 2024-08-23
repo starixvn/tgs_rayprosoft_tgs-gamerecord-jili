@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 using Tgs.GameInterface.Jili.Protos;
+using Tgs.GameRecord.Handle.Client;
 using Tgs.GameRecord.Jili.Core.ApplicationServices;
 using Valhalla.MessageQueue;
 
@@ -14,7 +15,7 @@ public class HandleRecordCommandServiceUnitTest
 	public async Task Loss()
 	{
 		var faceLogger = NullLogger<HandleRecordCommandService>.Instance;
-		var gameRecordInfo = Options.Create(new GameRecordInfoOptions
+		var fakeGameRecordInfoOptions = Options.Create(new GameRecordInfoOptions
 		{
 			GameProviderCode = "JILITF",
 			GameProviderConfiguration = "JILITFConfiguration",
@@ -24,7 +25,12 @@ public class HandleRecordCommandServiceUnitTest
 			IntervalMinutesMax = 10,
 			IntervalMinutesMinimum = 1
 		});
-		var fakeMessageSender = Substitute.For<IMessageSender>();
+		var fakePolicySettingsOptions = Options.Create(new PolicySettingsOptions
+		{
+			RetryCount = 1,
+			RetrySeconds = 1,
+		});
+		var fakeGameRecordHandleClient = Substitute.For<IGameRecordHandleClient>();
 
 		var command = new HandleRecordCommand(
 			Record: new GameRecordInfo
@@ -45,28 +51,28 @@ public class HandleRecordCommandServiceUnitTest
 				AdditionalData = "{\"Account\":\"4uk946xvbpcd\",\"WagersId\":1692153486628666049,\"GameId\":49,\"WagersTime\":\"2023-08-15T22:48:59-04:00\",\"BetAmount\":-1,\"PayoffTime\":\"2023-08-15T22:48:59-04:00\",\"PayoffAmount\":0.8,\"Status\":2,\"SettlementTime\":\"2023-08-15T22:48:59-04:00\",\"GameCategoryId\":1,\"VersionKey\":0,\"Type\":1,\"AgentId\":\"PG_PB2_PHP\",\"Turnover\":1}"
 			});
 
-		var service = new HandleRecordCommandService(
+		var sut = new HandleRecordCommandService(
 			faceLogger,
-			gameRecordInfo,
-			fakeMessageSender);
+			fakeGameRecordInfoOptions,
+			fakePolicySettingsOptions,
+			fakeGameRecordHandleClient);
 
-		await service.ExecuteAsync(command);
+		await sut.ExecuteAsync(command);
 
-		_ = fakeMessageSender
+		_ = fakeGameRecordHandleClient
 			.Received(1)
-			.PublishAsync(
-			subject: Arg.Is(Handle.Common.GameRecordHandleNatsConst.GameRecordHandleRequest),
-			data: Arg.Is(new Handle.Common.Protos.GameRecordHandleRequest
+			.HandleAsync(
+			source: Arg.Is(new Handle.Common.ViewModels.GameRecordHandleViewModel
 			{
-				GameProviderCode = gameRecordInfo.Value.GameProviderCode,
+				GameProviderCode = fakeGameRecordInfoOptions.Value.GameProviderCode,
 				PlayerCode = command.Record.Account,
 				ExternalRoundId = command.Record.WagersId,
 				ExternalBetId = command.Record.WagersId,
 				ExternalGameId = command.Record.GameId.ToString(),
-				ExternalCreatedOn = command.Record.WagersTime,
-				ExternalClosedOn = command.Record.PayoffTime,
-				ExternalPayoffOn = command.Record.PayoffTime,
-				ExternalResettleOn = DateTimeOffset.UnixEpoch.ToTimestamp(),
+				ExternalCreatedOn = command.Record.WagersTime.ToDateTimeOffset(),
+				ExternalClosedOn = command.Record.PayoffTime.ToDateTimeOffset(),
+				ExternalPayoffOn = command.Record.PayoffTime.ToDateTimeOffset(),
+				ExternalResettleOn = DateTimeOffset.UnixEpoch,
 				BetState = Handle.Common.Protos.BetState.Loss,
 				BetType = Handle.Common.Protos.BetType.Normal,
 				FreeGameState = Handle.Common.Protos.FreeGameState.None,
@@ -90,7 +96,7 @@ public class HandleRecordCommandServiceUnitTest
 	public async Task Win()
 	{
 		var faceLogger = NullLogger<HandleRecordCommandService>.Instance;
-		var gameRecordInfo = Options.Create(new GameRecordInfoOptions
+		var fakeGameRecordInfoOptions = Options.Create(new GameRecordInfoOptions
 		{
 			GameProviderCode = "JILITF",
 			GameProviderConfiguration = "JILITFConfiguration",
@@ -100,7 +106,12 @@ public class HandleRecordCommandServiceUnitTest
 			IntervalMinutesMax = 10,
 			IntervalMinutesMinimum = 1
 		});
-		var fakeMessageSender = Substitute.For<IMessageSender>();
+		var fakePolicySettingsOptions = Options.Create(new PolicySettingsOptions
+		{
+			RetryCount = 1,
+			RetrySeconds = 1,
+		});
+		var fakeGameRecordHandleClient = Substitute.For<IGameRecordHandleClient>();
 
 		var command = new HandleRecordCommand(
 			Record: new GameRecordInfo
@@ -121,28 +132,28 @@ public class HandleRecordCommandServiceUnitTest
 				AdditionalData = "{\"Account\":\"4ukpmyqhh2d7\",\"WagersId\":1692154079166114134,\"GameId\":134,\"WagersTime\":\"2023-08-15T22:48:59-04:00\",\"BetAmount\":-5,\"PayoffTime\":\"2023-08-15T22:48:59-04:00\",\"PayoffAmount\":27.7,\"Status\":1,\"SettlementTime\":\"2023-08-15T22:48:59-04:00\",\"GameCategoryId\":1,\"VersionKey\":0,\"Type\":1,\"AgentId\":\"PG_PB2_PHP\",\"Turnover\":5}"
 			});
 
-		var service = new HandleRecordCommandService(
+		var sut = new HandleRecordCommandService(
 			faceLogger,
-			gameRecordInfo,
-			fakeMessageSender);
+			fakeGameRecordInfoOptions,
+			fakePolicySettingsOptions,
+			fakeGameRecordHandleClient);
 
-		await service.ExecuteAsync(command);
+		await sut.ExecuteAsync(command);
 
-		_ = fakeMessageSender
+		_ = fakeGameRecordHandleClient
 			.Received(1)
-			.PublishAsync(
-			subject: Arg.Is(Handle.Common.GameRecordHandleNatsConst.GameRecordHandleRequest),
-			data: Arg.Is(new Handle.Common.Protos.GameRecordHandleRequest
+			.HandleAsync(
+			source: Arg.Is(new Handle.Common.ViewModels.GameRecordHandleViewModel
 			{
-				GameProviderCode = gameRecordInfo.Value.GameProviderCode,
+				GameProviderCode = fakeGameRecordInfoOptions.Value.GameProviderCode,
 				PlayerCode = command.Record.Account,
 				ExternalRoundId = command.Record.WagersId,
 				ExternalBetId = command.Record.WagersId,
 				ExternalGameId = command.Record.GameId.ToString(),
-				ExternalCreatedOn = command.Record.WagersTime,
-				ExternalClosedOn = command.Record.PayoffTime,
-				ExternalPayoffOn = command.Record.PayoffTime,
-				ExternalResettleOn = DateTimeOffset.UnixEpoch.ToTimestamp(),
+				ExternalCreatedOn = command.Record.WagersTime.ToDateTimeOffset(),
+				ExternalClosedOn = command.Record.PayoffTime.ToDateTimeOffset(),
+				ExternalPayoffOn = command.Record.PayoffTime.ToDateTimeOffset(),
+				ExternalResettleOn = DateTimeOffset.UnixEpoch,
 				BetState = Handle.Common.Protos.BetState.Win,
 				BetType = Handle.Common.Protos.BetType.Normal,
 				FreeGameState = Handle.Common.Protos.FreeGameState.None,

@@ -1,15 +1,15 @@
 ﻿using System.Text;
 using System.Text.Json;
 using Tgs.GameRecord.Jili.Common;
+using Tgs.GameRecord.Jili.Core;
 using Tgs.GameRecord.Jili.Core.ApplicationServices;
-using Tgs.ServiceUtility;
 using Valhalla.MessageQueue;
 
 namespace Tgs.GameRecord.Jili.Messages;
 
 public class ManualMessageHandler(
 	ILogger<ManualMessageHandler> logger,
-	ICommandService<PullRecordCommand> service) : IMessageHandler<ReadOnlyMemory<byte>>
+	IPullRecordDispatcher dispatcher) : IMessageHandler<ReadOnlyMemory<byte>>
 {
 	public ValueTask HandleAsync(string subject, ReadOnlyMemory<byte> data, IEnumerable<MessageHeaderValue>? headerValues, CancellationToken cancellationToken = default)
 	{
@@ -17,17 +17,29 @@ public class ManualMessageHandler(
 		var message = JsonSerializer.Deserialize<JiliGameRecordMessage>(json)
 			?? throw new NullReferenceException("The request data resolves to a null value");
 
-		logger.LogInformation("LogOn:{logOn} Information Request:{message}", DateTime.Now.ToString("o"), message);
+		logger.LogInformation("{logInformation}",
+			JsonSerializer.Serialize(new
+			{
+				LogOn = DateTime.Now.ToString("u"),
+				Subject = subject,
+				Data = new
+				{
+					message.ApiUrl,
+					message.AgentId,
+					message.AgentKey,
+					StartTime = message.StartTime.ToString("u"),
+					EndTime = message.EndTime.ToString("u")
+				},
+				Message = "This message receiving handler."
+			}));
 
-		var command = new PullRecordCommand(
-			ApiUrl: message.ApiUrl,
-			AgentId: message.AgentId,
-			AgentKey: message.AgentKey,
-			StartTime: message.StartTime,
-			EndTime: message.EndTime);
-
-		return service.ExecuteAsync(
-			command: command,
+		return dispatcher.PushCommandAsync(
+			command: new PullRecordCommand(
+				ApiUrl: message.ApiUrl,
+				AgentId: message.AgentId,
+				AgentKey: message.AgentKey,
+				StartTime: message.StartTime,
+				EndTime: message.EndTime),
 			cancellationToken: cancellationToken);
 	}
 }

@@ -1,14 +1,16 @@
-﻿using Tgs.GameRecord.Jili.Core.JobApplicationServices;
+﻿using Tgs.GameRecord.Jili.Core;
+
+using Tgs.GameRecord.Jili.Core.JobApplicationServices;
 using Tgs.ServiceUtility;
 
-namespace Tgs.GameRecord.Jili.Core;
+namespace Tgs.GameRecord.Jili.Repositories;
 
-internal class HangfireUtensil(
+internal class HangfireUtensilRepository(
 	ICommandService<JobCheckCommand> jobCheckService,
 	ICommandService<JobExecute30MinsCommand> jobExecute30MinsService,
 	ICommandService<JobExecuteCommand> jobExecuteService,
 	ICommandService<JobExecuteHourlyCommand> jobExecuteHourlService,
-	ICommandService<JobInitCommand> jobInitservice) : IHangfireUtensil
+	ICommandService<JobInitCommand> jobInitservice) : IHangfireUtensilRepository
 {
 	public Task JobCheckAsync()
 		=> jobCheckService.ExecuteAsync(new()).AsTask();

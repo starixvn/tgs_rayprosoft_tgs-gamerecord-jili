@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.Jili.Core", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.Jili.Core.UnitTest", "Tgs.GameRecord.Jili.Core.UnitTest\Tgs.GameRecord.Jili.Core.UnitTest.csproj", "{77966193-E704-4E95-A10A-4FBD729E6C11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameRecord.Jili.Common", "Tgs.GameRecord.Jili.Common\Tgs.GameRecord.Jili.Common.csproj", "{2511880C-9FB4-4964-94E2-096B257D2FAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.Jili.Common", "Tgs.GameRecord.Jili.Common\Tgs.GameRecord.Jili.Common.csproj", "{2511880C-9FB4-4964-94E2-096B257D2FAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameRecord.Jili.Repositories", "Tgs.GameRecord.Jili.Repositories\Tgs.GameRecord.Jili.Repositories.csproj", "{939998D3-B43A-4F22-97B1-00B43A8123F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{2511880C-9FB4-4964-94E2-096B257D2FAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2511880C-9FB4-4964-94E2-096B257D2FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2511880C-9FB4-4964-94E2-096B257D2FAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{939998D3-B43A-4F22-97B1-00B43A8123F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{939998D3-B43A-4F22-97B1-00B43A8123F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{939998D3-B43A-4F22-97B1-00B43A8123F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{939998D3-B43A-4F22-97B1-00B43A8123F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
